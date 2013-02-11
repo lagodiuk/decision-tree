@@ -1,6 +1,8 @@
 package com.lagodiuk.decisiontree;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,12 +46,34 @@ public class DecisionTree {
 		return this.tree;
 	}
 
-	public static DecisionTree build(List<Item> items, Map<String, List<? extends Predicate>> attributeConditions) {
-		DefaultMutableTreeNode tree = buildTree(items, attributeConditions);
+	public static DecisionTree build(
+			List<Item> items,
+			List<? extends Predicate> defaultPredicates) {
+
+		return build(items, Collections.<String, List<? extends Predicate>> emptyMap(), defaultPredicates);
+	}
+
+	public static DecisionTree build(
+			List<Item> items,
+			Map<String, List<? extends Predicate>> attributePredicates) {
+
+		return build(items, attributePredicates, Collections.<Predicate> emptyList());
+	}
+
+	public static DecisionTree build(
+			List<Item> items,
+			Map<String, List<? extends Predicate>> attributePredicates,
+			List<? extends Predicate> defaultPredicates) {
+
+		DefaultMutableTreeNode tree = buildTree(items, attributePredicates, defaultPredicates);
 		return new DecisionTree(tree);
 	}
 
-	private static DefaultMutableTreeNode buildTree(List<Item> items, Map<String, List<? extends Predicate>> attributeConditions) {
+	private static DefaultMutableTreeNode buildTree(
+			List<Item> items, Map<String,
+			List<? extends Predicate>> attributeConditions,
+			List<? extends Predicate> defaultPredicates) {
+
 		double entropy = entropy(items);
 
 		if (Double.compare(entropy, 0) == 0) {
@@ -60,7 +84,7 @@ public class DecisionTree {
 			return new DefaultMutableTreeNode(category);
 		}
 
-		Rule rule = divide(items, attributeConditions);
+		Rule rule = divide(items, attributeConditions, defaultPredicates);
 
 		if (rule == null) {
 			// can't find rule which produces better division
@@ -81,8 +105,8 @@ public class DecisionTree {
 
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(rule);
 
-		DefaultMutableTreeNode matchNode = buildTree(matched, attributeConditions);
-		DefaultMutableTreeNode notMatchNode = buildTree(notMatched, attributeConditions);
+		DefaultMutableTreeNode matchNode = buildTree(matched, attributeConditions, defaultPredicates);
+		DefaultMutableTreeNode notMatchNode = buildTree(notMatched, attributeConditions, defaultPredicates);
 
 		node.add(matchNode);
 		node.add(notMatchNode);
@@ -90,7 +114,11 @@ public class DecisionTree {
 		return node;
 	}
 
-	private static Rule divide(List<Item> items, Map<String, List<? extends Predicate>> attributeConditions) {
+	private static Rule divide(
+			List<Item> items,
+			Map<String, List<? extends Predicate>> attributeConditions,
+			List<? extends Predicate> defaultPredicates) {
+
 		double initialEntropy = entropy(items);
 
 		double bestGain = 0;
@@ -100,7 +128,18 @@ public class DecisionTree {
 			for (String attr : baseItem.getAttributeNames()) {
 				Object baseValue = baseItem.getFieldValue(attr);
 
-				for (Predicate cond : attributeConditions.get(attr)) {
+				List<Predicate> predicates = new ArrayList<Predicate>();
+
+				List<? extends Predicate> attributePredicates = attributeConditions.get(attr);
+				if ((attributePredicates != null) && (!attributePredicates.isEmpty())) {
+					predicates.addAll(attributePredicates);
+				}
+
+				if ((defaultPredicates != null) && (!defaultPredicates.isEmpty())) {
+					predicates.addAll(defaultPredicates);
+				}
+
+				for (Predicate cond : predicates) {
 					Rule rule = new Rule(attr, cond, baseValue);
 
 					List<Item> matched = new LinkedList<Item>();

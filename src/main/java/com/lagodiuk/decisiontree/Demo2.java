@@ -5,10 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,10 +17,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class Demo2 {
 
 	public static void main(String[] args) {
-		Map<String, List<? extends Predicate>> attributeConditions = new HashMap<String, List<? extends Predicate>>();
-		attributeConditions.put("x", Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE));
-		attributeConditions.put("y", Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE));
-
 		List<Item> items = new LinkedList<Item>();
 		for (double i = -12; i <= 12; i += 1) {
 			for (double j = -12; j <= 12; j += 1) {
@@ -30,7 +24,7 @@ public class Demo2 {
 			}
 		}
 
-		DecisionTree classifier = DecisionTree.build(items, attributeConditions);
+		DecisionTree classifier = DecisionTree.build(items, Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE));
 
 		display(classifier.getTree(), 300, 300);
 

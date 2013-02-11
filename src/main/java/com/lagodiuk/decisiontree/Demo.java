@@ -2,9 +2,7 @@ package com.lagodiuk.decisiontree;
 
 import java.awt.BorderLayout;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -14,12 +12,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class Demo {
 
 	public static void main(String[] args) {
-		Map<String, List<? extends Predicate>> attributeConditions = new HashMap<String, List<? extends Predicate>>();
-		attributeConditions.put("Соперник", Arrays.asList(BasicPredicates.EQUAL));
-		attributeConditions.put("Играем", Arrays.asList(BasicPredicates.EQUAL));
-		attributeConditions.put("Лидеры", Arrays.asList(BasicPredicates.EQUAL));
-		attributeConditions.put("Дождь", Arrays.asList(BasicPredicates.EQUAL));
-
 		List<Item> items = Arrays.asList(
 				makeItem("Выше", "Дома", "На месте", "Да", "Loose"),
 				makeItem("Выше", "Дома", "На месте", "Нет", "Win"),
@@ -29,7 +21,7 @@ public class Demo {
 				makeItem("Ниже", "Дома", "Пропускают", "Да", "Win"),
 				makeItem("Выше", "В гостях", "На месте", "Да", "Loose"));
 
-		DecisionTree classifier = DecisionTree.build(items, attributeConditions);
+		DecisionTree classifier = DecisionTree.build(items, Arrays.asList(BasicPredicates.EQUAL));
 
 		display(classifier.getTree(), 300, 300);
 
