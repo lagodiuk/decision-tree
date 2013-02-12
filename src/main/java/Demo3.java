@@ -30,7 +30,7 @@ public class Demo3 {
 		Random random = new Random();
 
 		List<Item> items = new LinkedList<Item>();
-		for (double i = 0; i <= 400; i++) {
+		for (double i = 0; i <= 4000; i++) {
 			items.add(makeItem((random.nextDouble() - random.nextDouble()) * 14, (random.nextDouble() - random.nextDouble()) * 14));
 		}
 

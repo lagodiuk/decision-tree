@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -50,29 +52,31 @@ public class DecisionTree {
 			List<Item> items,
 			List<? extends Predicate> defaultPredicates) {
 
-		return build(items, Collections.<String, List<? extends Predicate>> emptyMap(), defaultPredicates);
+		return build(items, Collections.<String, List<? extends Predicate>> emptyMap(), defaultPredicates, Collections.<String> emptySet());
 	}
 
 	public static DecisionTree build(
 			List<Item> items,
 			Map<String, List<? extends Predicate>> attributePredicates) {
 
-		return build(items, attributePredicates, Collections.<Predicate> emptyList());
+		return build(items, attributePredicates, Collections.<Predicate> emptyList(), Collections.<String> emptySet());
 	}
 
 	public static DecisionTree build(
 			List<Item> items,
 			Map<String, List<? extends Predicate>> attributePredicates,
-			List<? extends Predicate> defaultPredicates) {
+			List<? extends Predicate> defaultPredicates,
+			Set<String> ignoredAttributes) {
 
-		DefaultMutableTreeNode tree = buildTree(items, attributePredicates, defaultPredicates);
+		DefaultMutableTreeNode tree = buildTree(items, attributePredicates, defaultPredicates, ignoredAttributes);
 		return new DecisionTree(tree);
 	}
 
 	private static DefaultMutableTreeNode buildTree(
-			List<Item> items, Map<String,
-			List<? extends Predicate>> attributeConditions,
-			List<? extends Predicate> defaultPredicates) {
+			List<Item> items,
+			Map<String, List<? extends Predicate>> attributeConditions,
+			List<? extends Predicate> defaultPredicates,
+			Set<String> ignoredAttributes) {
 
 		double entropy = entropy(items);
 
@@ -80,16 +84,17 @@ public class DecisionTree {
 			// entropy == 0
 			// all categories the same
 			List<String> categories = getCategories(items);
-			String category = categories.get(0);
+			String category = getMostFrequentCategory(categories);
 			return new DefaultMutableTreeNode(category);
 		}
 
-		Rule rule = divide(items, attributeConditions, defaultPredicates);
+		Rule rule = divide(items, attributeConditions, defaultPredicates, ignoredAttributes);
 
 		if (rule == null) {
 			// can't find rule which produces better division
 			List<String> categories = getCategories(items);
-			return new DefaultMutableTreeNode(categories);
+			String category = getMostFrequentCategory(categories);
+			return new DefaultMutableTreeNode(category);
 		}
 
 		List<Item> matched = new LinkedList<Item>();
@@ -105,8 +110,8 @@ public class DecisionTree {
 
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(rule);
 
-		DefaultMutableTreeNode matchNode = buildTree(matched, attributeConditions, defaultPredicates);
-		DefaultMutableTreeNode notMatchNode = buildTree(notMatched, attributeConditions, defaultPredicates);
+		DefaultMutableTreeNode matchNode = buildTree(matched, attributeConditions, defaultPredicates, ignoredAttributes);
+		DefaultMutableTreeNode notMatchNode = buildTree(notMatched, attributeConditions, defaultPredicates, ignoredAttributes);
 
 		node.add(matchNode);
 		node.add(notMatchNode);
@@ -114,10 +119,30 @@ public class DecisionTree {
 		return node;
 	}
 
+	private static String getMostFrequentCategory(List<String> categories) {
+		Map<String, Integer> categoryCountMap = groupAndCount(categories);
+
+		String mostFrequentCategory = null;
+		int mostFrequentCategoryCount = -1;
+
+		for (Entry<String, Integer> e : categoryCountMap.entrySet()) {
+			String category = e.getKey();
+			int count = e.getValue();
+
+			if (count >= mostFrequentCategoryCount) {
+				mostFrequentCategoryCount = count;
+				mostFrequentCategory = category;
+			}
+		}
+
+		return mostFrequentCategory;
+	}
+
 	private static Rule divide(
 			List<Item> items,
 			Map<String, List<? extends Predicate>> attributeConditions,
-			List<? extends Predicate> defaultPredicates) {
+			List<? extends Predicate> defaultPredicates,
+			Set<String> ignoredAttributes) {
 
 		double initialEntropy = entropy(items);
 
@@ -126,6 +151,11 @@ public class DecisionTree {
 
 		for (Item baseItem : new LinkedList<Item>(items)) {
 			for (String attr : baseItem.getAttributeNames()) {
+
+				if (ignoredAttributes.contains(attr)) {
+					continue;
+				}
+
 				Object baseValue = baseItem.getFieldValue(attr);
 
 				List<Predicate> predicates = new ArrayList<Predicate>();
