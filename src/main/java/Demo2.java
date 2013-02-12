@@ -1,4 +1,3 @@
-package com.lagodiuk.decisiontree;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,6 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import com.lagodiuk.decisiontree.BasicPredicates;
+import com.lagodiuk.decisiontree.DecisionTree;
+import com.lagodiuk.decisiontree.Item;
 
 public class Demo2 {
 
