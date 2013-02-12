@@ -133,9 +133,7 @@ public class DecisionTree {
 				List<? extends Predicate> attributePredicates = attributeConditions.get(attr);
 				if ((attributePredicates != null) && (!attributePredicates.isEmpty())) {
 					predicates.addAll(attributePredicates);
-				}
-
-				if ((defaultPredicates != null) && (!defaultPredicates.isEmpty())) {
+				} else if ((defaultPredicates != null) && (!defaultPredicates.isEmpty())) {
 					predicates.addAll(defaultPredicates);
 				}
 
