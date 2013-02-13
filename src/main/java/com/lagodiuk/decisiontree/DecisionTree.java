@@ -30,8 +30,6 @@ public class DecisionTree {
 		if (Rule.class.isInstance(nodeData)) {
 			Rule rule = (Rule) nodeData;
 
-			// System.out.println(rule + "\t" + rule.match(item));
-
 			if (rule.match(item)) {
 				DefaultMutableTreeNode matchNode = (DefaultMutableTreeNode) node.getChildAt(0);
 				return this.classify(item, matchNode);
@@ -39,9 +37,9 @@ public class DecisionTree {
 				DefaultMutableTreeNode notMatchNode = (DefaultMutableTreeNode) node.getChildAt(1);
 				return this.classify(item, notMatchNode);
 			}
+		} else {
+			return nodeData.toString();
 		}
-
-		return nodeData.toString();
 	}
 
 	public DefaultMutableTreeNode getTree() {
@@ -57,66 +55,57 @@ public class DecisionTree {
 
 	public static DecisionTree build(
 			List<Item> items,
-			Map<String, List<? extends Predicate>> attributePredicates) {
+			Map<String, List<? extends Predicate>> attributesPredicates) {
 
-		return build(items, attributePredicates, Collections.<Predicate> emptyList(), Collections.<String> emptySet());
+		return build(items, attributesPredicates, Collections.<Predicate> emptyList(), Collections.<String> emptySet());
 	}
 
 	public static DecisionTree build(
 			List<Item> items,
-			Map<String, List<? extends Predicate>> attributePredicates,
+			Map<String, List<? extends Predicate>> attributesPredicates,
 			List<? extends Predicate> defaultPredicates,
 			Set<String> ignoredAttributes) {
 
-		DefaultMutableTreeNode tree = buildTree(items, attributePredicates, defaultPredicates, ignoredAttributes);
+		DefaultMutableTreeNode tree = buildTree(items, attributesPredicates, defaultPredicates, ignoredAttributes);
 		return new DecisionTree(tree);
 	}
 
 	private static DefaultMutableTreeNode buildTree(
 			List<Item> items,
-			Map<String, List<? extends Predicate>> attributeConditions,
+			Map<String, List<? extends Predicate>> attributesPredicates,
 			List<? extends Predicate> defaultPredicates,
 			Set<String> ignoredAttributes) {
 
 		double entropy = entropy(items);
 
 		if (Double.compare(entropy, 0) == 0) {
-			// entropy == 0
 			// all categories the same
-			List<String> categories = getCategories(items);
-			String category = getMostFrequentCategory(categories);
-			return new DefaultMutableTreeNode(category);
+			return makeLeaf(items);
 		}
 
-		Rule rule = divide(items, attributeConditions, defaultPredicates, ignoredAttributes);
+		Rule rule = findBestSplittingRule(items, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		if (rule == null) {
-			// can't find rule which produces better division
-			List<String> categories = getCategories(items);
-			String category = getMostFrequentCategory(categories);
-			return new DefaultMutableTreeNode(category);
+			// can't find rule which produces division, that reduces entropy
+			return makeLeaf(items);
 		}
 
-		List<Item> matched = new LinkedList<Item>();
-		List<Item> notMatched = new LinkedList<Item>();
+		SplitResult splitResult = split(rule, items);
 
-		for (Item otherItem : new LinkedList<Item>(items)) {
-			if (rule.match(otherItem)) {
-				matched.add(otherItem);
-			} else {
-				notMatched.add(otherItem);
-			}
-		}
+		DefaultMutableTreeNode matchSubTree = buildTree(splitResult.matched, attributesPredicates, defaultPredicates, ignoredAttributes);
 
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(rule);
+		DefaultMutableTreeNode notMatchSubTree = buildTree(splitResult.notMatched, attributesPredicates, defaultPredicates, ignoredAttributes);
 
-		DefaultMutableTreeNode matchNode = buildTree(matched, attributeConditions, defaultPredicates, ignoredAttributes);
-		DefaultMutableTreeNode notMatchNode = buildTree(notMatched, attributeConditions, defaultPredicates, ignoredAttributes);
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(rule);
+		root.add(matchSubTree);
+		root.add(notMatchSubTree);
+		return root;
+	}
 
-		node.add(matchNode);
-		node.add(notMatchNode);
-
-		return node;
+	private static DefaultMutableTreeNode makeLeaf(List<Item> items) {
+		List<String> categories = getCategories(items);
+		String category = getMostFrequentCategory(categories);
+		return new DefaultMutableTreeNode(category);
 	}
 
 	private static String getMostFrequentCategory(List<String> categories) {
@@ -138,15 +127,16 @@ public class DecisionTree {
 		return mostFrequentCategory;
 	}
 
-	private static Rule divide(
+	private static Rule findBestSplittingRule(
 			List<Item> items,
-			Map<String, List<? extends Predicate>> attributeConditions,
+			Map<String, List<? extends Predicate>> attributesPredicates,
 			List<? extends Predicate> defaultPredicates,
 			Set<String> ignoredAttributes) {
 
 		double initialEntropy = entropy(items);
 
 		double bestGain = 0;
+
 		Rule bestRule = null;
 
 		for (Item baseItem : new LinkedList<Item>(items)) {
@@ -156,36 +146,20 @@ public class DecisionTree {
 					continue;
 				}
 
-				Object baseValue = baseItem.getFieldValue(attr);
+				Object value = baseItem.getFieldValue(attr);
 
-				List<Predicate> predicates = new ArrayList<Predicate>();
+				List<Predicate> predicates = predicatesForAttribute(attr, attributesPredicates, defaultPredicates);
 
-				List<? extends Predicate> attributePredicates = attributeConditions.get(attr);
-				if ((attributePredicates != null) && (!attributePredicates.isEmpty())) {
-					predicates.addAll(attributePredicates);
-				} else if ((defaultPredicates != null) && (!defaultPredicates.isEmpty())) {
-					predicates.addAll(defaultPredicates);
-				}
+				for (Predicate pred : predicates) {
+					Rule rule = new Rule(attr, pred, value);
 
-				for (Predicate cond : predicates) {
-					Rule rule = new Rule(attr, cond, baseValue);
+					SplitResult splitResult = split(rule, items);
 
-					List<Item> matched = new LinkedList<Item>();
-					List<Item> notMatched = new LinkedList<Item>();
+					double matchedEntropy = entropy(splitResult.matched);
+					double notMatchedEntropy = entropy(splitResult.notMatched);
 
-					for (Item otherItem : new LinkedList<Item>(items)) {
-						if (rule.match(otherItem)) {
-							matched.add(otherItem);
-						} else {
-							notMatched.add(otherItem);
-						}
-					}
-
-					double matchedEntropy = entropy(matched);
-					double notMatchedEntropy = entropy(notMatched);
-
-					double pMatched = (double) matched.size() / items.size();
-					double pNotMatched = 1 - pMatched;
+					double pMatched = (double) splitResult.matched.size() / items.size();
+					double pNotMatched = (double) splitResult.notMatched.size() / items.size();
 
 					double gain = initialEntropy - (pMatched * matchedEntropy) - (pNotMatched * notMatchedEntropy);
 					if (gain > bestGain) {
@@ -198,10 +172,56 @@ public class DecisionTree {
 		return bestRule;
 	}
 
+	private static SplitResult split(Rule rule, List<Item> base) {
+		List<Item> matched = new LinkedList<Item>();
+		List<Item> notMatched = new LinkedList<Item>();
+
+		for (Item otherItem : new LinkedList<Item>(base)) {
+			if (rule.match(otherItem)) {
+				matched.add(otherItem);
+			} else {
+				notMatched.add(otherItem);
+			}
+		}
+
+		return new SplitResult(matched, notMatched);
+	}
+
+	private static List<Predicate> predicatesForAttribute(
+			String attr,
+			Map<String, List<? extends Predicate>> attributesPredicates,
+			List<? extends Predicate> defaultPredicates) {
+
+		List<Predicate> predicates = new ArrayList<Predicate>();
+
+		List<? extends Predicate> attrPredicates = attributesPredicates.get(attr);
+		if ((attrPredicates != null) && (!attrPredicates.isEmpty())) {
+			predicates.addAll(attrPredicates);
+		} else if ((defaultPredicates != null) && (!defaultPredicates.isEmpty())) {
+			predicates.addAll(defaultPredicates);
+		}
+
+		return predicates;
+	}
+
 	private static double entropy(List<Item> items) {
 		List<String> categories = getCategories(items);
 		Map<String, Integer> categoryCount = groupAndCount(categories);
 		return entropy(categoryCount.values());
+	}
+
+	private static double entropy(Collection<Integer> values) {
+		double totalCount = 0;
+		for (Integer count : values) {
+			totalCount += count;
+		}
+
+		double entropy = 0;
+		for (Integer count : values) {
+			double x = count / totalCount;
+			entropy += -x * Math.log(x);
+		}
+		return entropy;
 	}
 
 	private static List<String> getCategories(List<Item> items) {
@@ -225,17 +245,13 @@ public class DecisionTree {
 		return categoryCount;
 	}
 
-	private static double entropy(Collection<Integer> values) {
-		double totalCount = 0;
-		for (Integer count : values) {
-			totalCount += count;
-		}
+	private static class SplitResult {
+		public final List<Item> matched;
+		public final List<Item> notMatched;
 
-		double entropy = 0;
-		for (Integer count : values) {
-			double x = count / totalCount;
-			entropy += -x * Math.log(x);
+		public SplitResult(List<Item> matched, List<Item> notMatched) {
+			this.matched = new ArrayList<Item>(matched);
+			this.notMatched = new ArrayList<Item>(notMatched);
 		}
-		return entropy;
 	}
 }
