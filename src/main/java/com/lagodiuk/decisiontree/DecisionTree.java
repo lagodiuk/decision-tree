@@ -83,20 +83,18 @@ public class DecisionTree {
 			return makeLeaf(items);
 		}
 
-		Rule rule = findBestSplittingRule(items, attributesPredicates, defaultPredicates, ignoredAttributes);
+		SplitResult splitResult = findBestSplit(items, attributesPredicates, defaultPredicates, ignoredAttributes);
 
-		if (rule == null) {
-			// can't find rule which produces division, that reduces entropy
+		if (splitResult == null) {
+			// can't find split which reduces entropy
 			return makeLeaf(items);
 		}
-
-		SplitResult splitResult = split(rule, items);
 
 		DefaultMutableTreeNode matchSubTree = buildTree(splitResult.matched, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		DefaultMutableTreeNode notMatchSubTree = buildTree(splitResult.notMatched, attributesPredicates, defaultPredicates, ignoredAttributes);
 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(rule);
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(splitResult.rule);
 		root.add(matchSubTree);
 		root.add(notMatchSubTree);
 		return root;
@@ -127,7 +125,7 @@ public class DecisionTree {
 		return mostFrequentCategory;
 	}
 
-	private static Rule findBestSplittingRule(
+	private static SplitResult findBestSplit(
 			List<Item> items,
 			Map<String, List<? extends Predicate>> attributesPredicates,
 			List<? extends Predicate> defaultPredicates,
@@ -137,7 +135,7 @@ public class DecisionTree {
 
 		double bestGain = 0;
 
-		Rule bestRule = null;
+		SplitResult bestSplitResult = null;
 
 		for (Item baseItem : new LinkedList<Item>(items)) {
 			for (String attr : baseItem.getAttributeNames()) {
@@ -164,12 +162,12 @@ public class DecisionTree {
 					double gain = initialEntropy - (pMatched * matchedEntropy) - (pNotMatched * notMatchedEntropy);
 					if (gain > bestGain) {
 						bestGain = gain;
-						bestRule = rule;
+						bestSplitResult = splitResult;
 					}
 				}
 			}
 		}
-		return bestRule;
+		return bestSplitResult;
 	}
 
 	private static SplitResult split(Rule rule, List<Item> base) {
@@ -184,7 +182,7 @@ public class DecisionTree {
 			}
 		}
 
-		return new SplitResult(matched, notMatched);
+		return new SplitResult(matched, notMatched, rule);
 	}
 
 	private static List<Predicate> predicatesForAttribute(
@@ -246,10 +244,15 @@ public class DecisionTree {
 	}
 
 	private static class SplitResult {
+
+		public final Rule rule;
+
 		public final List<Item> matched;
+
 		public final List<Item> notMatched;
 
-		public SplitResult(List<Item> matched, List<Item> notMatched) {
+		public SplitResult(List<Item> matched, List<Item> notMatched, Rule rule) {
+			this.rule = rule;
 			this.matched = new ArrayList<Item>(matched);
 			this.notMatched = new ArrayList<Item>(notMatched);
 		}
