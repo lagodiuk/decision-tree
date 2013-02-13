@@ -30,7 +30,7 @@ public class Demo3 {
 		Random random = new Random();
 
 		List<Item> items = new LinkedList<Item>();
-		for (double i = 0; i <= 4000; i++) {
+		for (double i = 0; i <= 1000; i++) {
 			items.add(makeItem((random.nextDouble() - random.nextDouble()) * 14, (random.nextDouble() - random.nextDouble()) * 14));
 		}
 
@@ -52,9 +52,10 @@ public class Demo3 {
 			for (int y = 0; y < 200; y++) {
 				Item item = makeEmptyItem((x - 100) / 5, (y - 100) / 5);
 
-				if ("in a circle".equals(classifier.classify(item))) {
+				if ("red".equals(classifier.classify(item))) {
 					g.setColor(Color.RED);
-				} else {
+				}
+				if ("green".equals(classifier.classify(item))) {
 					g.setColor(Color.GREEN);
 				}
 
@@ -71,9 +72,12 @@ public class Demo3 {
 		Item item = new Item();
 
 		if (((x * x) + (y * y)) <= (10 * 10)) {
-			item.setCategory("in a circle");
+			item.setCategory("red");
+			if (((x * x) + (y * y)) <= (5 * 5)) {
+				item.setCategory("green");
+			}
 		} else {
-			item.setCategory("out of a circle");
+			item.setCategory("green");
 		}
 
 		item.setAttribute("x", x);

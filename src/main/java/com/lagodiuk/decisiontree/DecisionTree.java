@@ -63,6 +63,14 @@ public class DecisionTree {
 	public static DecisionTree build(
 			List<Item> items,
 			Map<String, List<? extends Predicate>> attributesPredicates,
+			List<? extends Predicate> defaultPredicates) {
+
+		return build(items, attributesPredicates, defaultPredicates, Collections.<String> emptySet());
+	}
+
+	public static DecisionTree build(
+			List<Item> items,
+			Map<String, List<? extends Predicate>> attributesPredicates,
 			List<? extends Predicate> defaultPredicates,
 			Set<String> ignoredAttributes) {
 
