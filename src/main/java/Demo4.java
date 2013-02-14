@@ -16,7 +16,7 @@ public class Demo4 {
 	public static void main(String[] args) {
 
 		DecisionTree.Config config =
-				new DecisionTree.Config()
+				DecisionTree.newConfig()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
 						.setAttributePredicates("Outlook", Arrays.asList(BasicPredicates.EQUAL))
 						.setAttributePredicates("Windy", Arrays.asList(BasicPredicates.EQUAL))

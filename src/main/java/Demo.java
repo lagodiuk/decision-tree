@@ -15,7 +15,7 @@ public class Demo {
 	public static void main(String[] args) {
 
 		DecisionTree.Config config =
-				new DecisionTree.Config()
+				DecisionTree.newConfig()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL))
 						.setTrainingSet(Arrays.asList(
 								makeItem("Выше", "Дома", "На месте", "Да", "Loose"),

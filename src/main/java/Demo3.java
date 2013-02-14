@@ -22,7 +22,7 @@ public class Demo3 {
 	public static void main(String[] args) {
 
 		DecisionTree.Config config =
-				new DecisionTree.Config()
+				DecisionTree.newConfig()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.GTE, BasicPredicates.LTE))
 						.setTrainingSet(makeTrainingSet())
 						.setMinimalNumberOfItems(5);

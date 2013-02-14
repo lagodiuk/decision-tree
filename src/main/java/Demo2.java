@@ -21,7 +21,7 @@ public class Demo2 {
 	public static void main(String[] args) {
 
 		DecisionTree.Config config =
-				new DecisionTree.Config()
+				DecisionTree.newConfig()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
 						.setTrainingSet(makeTrainingSet());
 

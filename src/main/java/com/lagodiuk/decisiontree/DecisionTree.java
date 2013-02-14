@@ -46,6 +46,10 @@ public class DecisionTree {
 		return this.tree;
 	}
 
+	public static Config newConfig() {
+		return new Config();
+	}
+
 	public static DecisionTree build(Config config) {
 		DefaultMutableTreeNode tree = buildTree(
 				config.getTrainingSet(),
@@ -263,6 +267,10 @@ public class DecisionTree {
 		private Set<String> ignoredAttributes = new HashSet<String>();
 
 		private int minimalNumberOfItems = 1;
+
+		private Config() {
+
+		}
 
 		public List<Item> getTrainingSet() {
 			return this.trainingSet;
