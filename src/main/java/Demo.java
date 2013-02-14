@@ -14,8 +14,8 @@ public class Demo {
 
 	public static void main(String[] args) {
 
-		DecisionTree.Config config =
-				DecisionTree.newConfig()
+		DecisionTree classifier =
+				DecisionTree.createFactory()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL))
 						.setTrainingSet(Arrays.asList(
 								makeItem("Выше", "Дома", "На месте", "Да", "Loose"),
@@ -24,9 +24,8 @@ public class Demo {
 								makeItem("Ниже", "Дома", "Пропускают", "Нет", "Win"),
 								makeItem("Ниже", "В гостях", "Пропускают", "Нет", "Loose"),
 								makeItem("Ниже", "Дома", "Пропускают", "Да", "Win"),
-								makeItem("Выше", "В гостях", "На месте", "Да", "Loose")));
-
-		DecisionTree classifier = DecisionTree.build(config);
+								makeItem("Выше", "В гостях", "На месте", "Да", "Loose")))
+						.create();
 
 		display(classifier.getTree(), 300, 300);
 

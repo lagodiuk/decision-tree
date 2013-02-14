@@ -46,19 +46,8 @@ public class DecisionTree {
 		return this.tree;
 	}
 
-	public static Config newConfig() {
-		return new Config();
-	}
-
-	public static DecisionTree build(Config config) {
-		DefaultMutableTreeNode tree = buildTree(
-				config.getTrainingSet(),
-				config.getMinimalNumberOfItems(),
-				config.getAttributesPredicates(),
-				config.getDefaultPredicates(),
-				config.getIgnoredAttributes());
-
-		return new DecisionTree(tree);
+	public static Factory createFactory() {
+		return new Factory();
 	}
 
 	private static DefaultMutableTreeNode buildTree(
@@ -256,7 +245,7 @@ public class DecisionTree {
 		}
 	}
 
-	public static class Config {
+	public static class Factory {
 
 		private List<Item> trainingSet;
 
@@ -268,15 +257,26 @@ public class DecisionTree {
 
 		private int minimalNumberOfItems = 1;
 
-		private Config() {
+		private Factory() {
+			// encapsulate
+		}
 
+		public DecisionTree create() {
+			DefaultMutableTreeNode tree = buildTree(
+					this.trainingSet,
+					this.minimalNumberOfItems,
+					this.attributesPredicates,
+					this.defaultPredicates,
+					this.ignoredAttributes);
+
+			return new DecisionTree(tree);
 		}
 
 		public List<Item> getTrainingSet() {
 			return this.trainingSet;
 		}
 
-		public Config setTrainingSet(List<Item> trainingSet) {
+		public Factory setTrainingSet(List<Item> trainingSet) {
 			this.trainingSet = trainingSet;
 			return this;
 		}
@@ -285,7 +285,7 @@ public class DecisionTree {
 			return this.defaultPredicates;
 		}
 
-		public Config setDefaultPredicates(List<? extends Predicate> defaultPredicates) {
+		public Factory setDefaultPredicates(List<? extends Predicate> defaultPredicates) {
 			this.defaultPredicates = defaultPredicates;
 			return this;
 		}
@@ -294,7 +294,7 @@ public class DecisionTree {
 			return this.attributesPredicates;
 		}
 
-		public Config setAttributePredicates(String attribute, List<? extends Predicate> predicates) {
+		public Factory setAttributePredicates(String attribute, List<? extends Predicate> predicates) {
 			this.attributesPredicates.put(attribute, predicates);
 			return this;
 		}
@@ -303,12 +303,12 @@ public class DecisionTree {
 			return this.ignoredAttributes;
 		}
 
-		public Config setIgnoredAttributes(Set<String> ignoredAttributes) {
+		public Factory setIgnoredAttributes(Set<String> ignoredAttributes) {
 			this.ignoredAttributes = ignoredAttributes;
 			return this;
 		}
 
-		public Config setMinimalNumberOfItems(int minimalNumberOfItems) {
+		public Factory setMinimalNumberOfItems(int minimalNumberOfItems) {
 			this.minimalNumberOfItems = minimalNumberOfItems;
 			return this;
 		}

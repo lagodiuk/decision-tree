@@ -21,13 +21,12 @@ public class Demo3 {
 
 	public static void main(String[] args) {
 
-		DecisionTree.Config config =
-				DecisionTree.newConfig()
+		DecisionTree classifier =
+				DecisionTree.createFactory()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.GTE, BasicPredicates.LTE))
 						.setTrainingSet(makeTrainingSet())
-						.setMinimalNumberOfItems(5);
-
-		DecisionTree classifier = DecisionTree.build(config);
+						.setMinimalNumberOfItems(5)
+						.create();
 
 		display(classifier.getTree(), 300, 300);
 
