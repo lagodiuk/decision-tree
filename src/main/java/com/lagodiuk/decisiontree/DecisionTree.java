@@ -47,25 +47,26 @@ public class DecisionTree {
 	}
 
 	public static DecisionTree build(Config config) {
+		DefaultMutableTreeNode tree = buildTree(
+				config.getTrainingSet(),
+				config.getMinimalNumberOfItems(),
+				config.getAttributesPredicates(),
+				config.getDefaultPredicates(),
+				config.getIgnoredAttributes());
 
-		return build(config.getTrainingSet(), config.getAttributesPredicates(), config.getDefaultPredicates(), config.getIgnoredAttributes());
-	}
-
-	public static DecisionTree build(
-			List<Item> items,
-			Map<String, List<? extends Predicate>> attributesPredicates,
-			List<? extends Predicate> defaultPredicates,
-			Set<String> ignoredAttributes) {
-
-		DefaultMutableTreeNode tree = buildTree(items, attributesPredicates, defaultPredicates, ignoredAttributes);
 		return new DecisionTree(tree);
 	}
 
 	private static DefaultMutableTreeNode buildTree(
 			List<Item> items,
+			int minimalNumberOfItems,
 			Map<String, List<? extends Predicate>> attributesPredicates,
 			List<? extends Predicate> defaultPredicates,
 			Set<String> ignoredAttributes) {
+
+		if (items.size() <= minimalNumberOfItems) {
+			return makeLeaf(items);
+		}
 
 		double entropy = entropy(items);
 
@@ -81,9 +82,11 @@ public class DecisionTree {
 			return makeLeaf(items);
 		}
 
-		DefaultMutableTreeNode matchSubTree = buildTree(splitResult.matched, attributesPredicates, defaultPredicates, ignoredAttributes);
+		DefaultMutableTreeNode matchSubTree =
+				buildTree(splitResult.matched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
 
-		DefaultMutableTreeNode notMatchSubTree = buildTree(splitResult.notMatched, attributesPredicates, defaultPredicates, ignoredAttributes);
+		DefaultMutableTreeNode notMatchSubTree =
+				buildTree(splitResult.notMatched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(splitResult.rule);
 		root.add(matchSubTree);
@@ -259,6 +262,8 @@ public class DecisionTree {
 
 		private Set<String> ignoredAttributes = new HashSet<String>();
 
+		private int minimalNumberOfItems = 1;
+
 		public List<Item> getTrainingSet() {
 			return this.trainingSet;
 		}
@@ -295,5 +300,13 @@ public class DecisionTree {
 			return this;
 		}
 
+		public Config setMinimalNumberOfItems(int minimalNumberOfItems) {
+			this.minimalNumberOfItems = minimalNumberOfItems;
+			return this;
+		}
+
+		public int getMinimalNumberOfItems() {
+			return this.minimalNumberOfItems;
+		}
 	}
 }
