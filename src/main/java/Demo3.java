@@ -23,8 +23,9 @@ public class Demo3 {
 
 		DecisionTree.Config config =
 				new DecisionTree.Config()
-						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
-						.setTrainingSet(makeTrainingSet());
+						.setDefaultPredicates(Arrays.asList(BasicPredicates.GTE, BasicPredicates.LTE))
+						.setTrainingSet(makeTrainingSet())
+						.setMinimalNumberOfItems(5);
 
 		DecisionTree classifier = DecisionTree.build(config);
 
