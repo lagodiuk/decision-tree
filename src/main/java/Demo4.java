@@ -16,12 +16,13 @@ public class Demo4 {
 	public static void main(String[] args) {
 
 		DecisionTree dt =
-				DecisionTree.createFactory()
+				DecisionTree
+						.createFactory()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
 						.setAttributePredicates("Outlook", Arrays.asList(BasicPredicates.EQUAL))
 						.setAttributePredicates("Windy", Arrays.asList(BasicPredicates.EQUAL))
 						.setTrainingSet(makeTrainingSet())
-						.create();
+						.createDecisionTree();
 
 		display(dt.getTree(), 400, 500);
 	}

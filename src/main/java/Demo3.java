@@ -22,11 +22,12 @@ public class Demo3 {
 	public static void main(String[] args) {
 
 		DecisionTree classifier =
-				DecisionTree.createFactory()
+				DecisionTree
+						.createFactory()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.GTE, BasicPredicates.LTE))
 						.setTrainingSet(makeTrainingSet())
 						.setMinimalNumberOfItems(5)
-						.create();
+						.createDecisionTree();
 
 		display(classifier.getTree(), 300, 300);
 

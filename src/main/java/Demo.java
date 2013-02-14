@@ -15,7 +15,8 @@ public class Demo {
 	public static void main(String[] args) {
 
 		DecisionTree classifier =
-				DecisionTree.createFactory()
+				DecisionTree
+						.createFactory()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL))
 						.setTrainingSet(Arrays.asList(
 								makeItem("Выше", "Дома", "На месте", "Да", "Loose"),
@@ -25,7 +26,7 @@ public class Demo {
 								makeItem("Ниже", "В гостях", "Пропускают", "Нет", "Loose"),
 								makeItem("Ниже", "Дома", "Пропускают", "Да", "Win"),
 								makeItem("Выше", "В гостях", "На месте", "Да", "Loose")))
-						.create();
+						.createDecisionTree();
 
 		display(classifier.getTree(), 300, 300);
 

@@ -261,7 +261,7 @@ public class DecisionTree {
 			// encapsulate
 		}
 
-		public DecisionTree create() {
+		public DecisionTree createDecisionTree() {
 			DefaultMutableTreeNode tree = buildTree(
 					this.trainingSet,
 					this.minimalNumberOfItems,
