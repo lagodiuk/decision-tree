@@ -1,7 +1,5 @@
-
 import java.awt.BorderLayout;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -15,16 +13,20 @@ import com.lagodiuk.decisiontree.Item;
 public class Demo {
 
 	public static void main(String[] args) {
-		List<Item> items = Arrays.asList(
-				makeItem("Выше", "Дома", "На месте", "Да", "Loose"),
-				makeItem("Выше", "Дома", "На месте", "Нет", "Win"),
-				makeItem("Выше", "Дома", "Пропускают", "Нет", "Loose"),
-				makeItem("Ниже", "Дома", "Пропускают", "Нет", "Win"),
-				makeItem("Ниже", "В гостях", "Пропускают", "Нет", "Loose"),
-				makeItem("Ниже", "Дома", "Пропускают", "Да", "Win"),
-				makeItem("Выше", "В гостях", "На месте", "Да", "Loose"));
 
-		DecisionTree classifier = DecisionTree.build(items, Arrays.asList(BasicPredicates.EQUAL));
+		DecisionTree.Config config =
+				new DecisionTree.Config()
+						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL))
+						.setTrainingSet(Arrays.asList(
+								makeItem("Выше", "Дома", "На месте", "Да", "Loose"),
+								makeItem("Выше", "Дома", "На месте", "Нет", "Win"),
+								makeItem("Выше", "Дома", "Пропускают", "Нет", "Loose"),
+								makeItem("Ниже", "Дома", "Пропускают", "Нет", "Win"),
+								makeItem("Ниже", "В гостях", "Пропускают", "Нет", "Loose"),
+								makeItem("Ниже", "Дома", "Пропускают", "Да", "Win"),
+								makeItem("Выше", "В гостях", "На месте", "Да", "Loose")));
+
+		DecisionTree classifier = DecisionTree.build(config);
 
 		display(classifier.getTree(), 300, 300);
 
@@ -59,5 +61,4 @@ public class Demo {
 		frame.setVisible(true);
 		return frame;
 	}
-
 }

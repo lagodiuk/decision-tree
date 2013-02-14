@@ -2,8 +2,8 @@ package com.lagodiuk.decisiontree;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -46,26 +46,9 @@ public class DecisionTree {
 		return this.tree;
 	}
 
-	public static DecisionTree build(
-			List<Item> items,
-			List<? extends Predicate> defaultPredicates) {
+	public static DecisionTree build(Config config) {
 
-		return build(items, Collections.<String, List<? extends Predicate>> emptyMap(), defaultPredicates, Collections.<String> emptySet());
-	}
-
-	public static DecisionTree build(
-			List<Item> items,
-			Map<String, List<? extends Predicate>> attributesPredicates) {
-
-		return build(items, attributesPredicates, Collections.<Predicate> emptyList(), Collections.<String> emptySet());
-	}
-
-	public static DecisionTree build(
-			List<Item> items,
-			Map<String, List<? extends Predicate>> attributesPredicates,
-			List<? extends Predicate> defaultPredicates) {
-
-		return build(items, attributesPredicates, defaultPredicates, Collections.<String> emptySet());
+		return build(config.getTrainingSet(), config.getAttributesPredicates(), config.getDefaultPredicates(), config.getIgnoredAttributes());
 	}
 
 	public static DecisionTree build(
@@ -264,5 +247,53 @@ public class DecisionTree {
 			this.matched = new ArrayList<Item>(matched);
 			this.notMatched = new ArrayList<Item>(notMatched);
 		}
+	}
+
+	public static class Config {
+
+		private List<Item> trainingSet;
+
+		private List<? extends Predicate> defaultPredicates = new LinkedList<Predicate>();
+
+		private Map<String, List<? extends Predicate>> attributesPredicates = new HashMap<String, List<? extends Predicate>>();
+
+		private Set<String> ignoredAttributes = new HashSet<String>();
+
+		public List<Item> getTrainingSet() {
+			return this.trainingSet;
+		}
+
+		public Config setTrainingSet(List<Item> trainingSet) {
+			this.trainingSet = trainingSet;
+			return this;
+		}
+
+		public List<? extends Predicate> getDefaultPredicates() {
+			return this.defaultPredicates;
+		}
+
+		public Config setDefaultPredicates(List<? extends Predicate> defaultPredicates) {
+			this.defaultPredicates = defaultPredicates;
+			return this;
+		}
+
+		public Map<String, List<? extends Predicate>> getAttributesPredicates() {
+			return this.attributesPredicates;
+		}
+
+		public Config setAttributePredicates(String attribute, List<? extends Predicate> predicates) {
+			this.attributesPredicates.put(attribute, predicates);
+			return this;
+		}
+
+		public Set<String> getIgnoredAttributes() {
+			return this.ignoredAttributes;
+		}
+
+		public Config setIgnoredAttributes(Set<String> ignoredAttributes) {
+			this.ignoredAttributes = ignoredAttributes;
+			return this;
+		}
+
 	}
 }

@@ -3,10 +3,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -18,23 +16,17 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import com.lagodiuk.decisiontree.BasicPredicates;
 import com.lagodiuk.decisiontree.DecisionTree;
 import com.lagodiuk.decisiontree.Item;
-import com.lagodiuk.decisiontree.Predicate;
 
 public class Demo3 {
 
 	public static void main(String[] args) {
-		Map<String, List<? extends Predicate>> attributeConditions = new HashMap<String, List<? extends Predicate>>();
-		attributeConditions.put("x", Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE));
-		attributeConditions.put("y", Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE));
 
-		Random random = new Random();
+		DecisionTree.Config config =
+				new DecisionTree.Config()
+						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
+						.setTrainingSet(makeTrainingSet());
 
-		List<Item> items = new LinkedList<Item>();
-		for (double i = 0; i <= 1000; i++) {
-			items.add(makeItem((random.nextDouble() - random.nextDouble()) * 14, (random.nextDouble() - random.nextDouble()) * 14));
-		}
-
-		DecisionTree classifier = DecisionTree.build(items, attributeConditions);
+		DecisionTree classifier = DecisionTree.build(config);
 
 		display(classifier.getTree(), 300, 300);
 
@@ -66,6 +58,17 @@ public class Demo3 {
 		for (;;) {
 			p.getGraphics().drawImage(bi, 0, 0, null);
 		}
+	}
+
+	private static List<Item> makeTrainingSet() {
+		Random random = new Random();
+
+		List<Item> items = new LinkedList<Item>();
+		for (double i = 0; i <= 1000; i++) {
+			items.add(makeItem((random.nextDouble() - random.nextDouble()) * 14, (random.nextDouble() - random.nextDouble()) * 14));
+		}
+
+		return items;
 	}
 
 	private static Item makeItem(double x, double y) {

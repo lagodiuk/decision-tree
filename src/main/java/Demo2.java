@@ -1,4 +1,3 @@
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -20,14 +19,13 @@ import com.lagodiuk.decisiontree.Item;
 public class Demo2 {
 
 	public static void main(String[] args) {
-		List<Item> items = new LinkedList<Item>();
-		for (double i = -12; i <= 12; i += 1) {
-			for (double j = -12; j <= 12; j += 1) {
-				items.add(makeItem(i, j));
-			}
-		}
 
-		DecisionTree classifier = DecisionTree.build(items, Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE));
+		DecisionTree.Config config =
+				new DecisionTree.Config()
+						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
+						.setTrainingSet(makeTrainingSet());
+
+		DecisionTree classifier = DecisionTree.build(config);
 
 		display(classifier.getTree(), 300, 300);
 
@@ -58,6 +56,16 @@ public class Demo2 {
 		for (;;) {
 			p.getGraphics().drawImage(bi, 0, 0, null);
 		}
+	}
+
+	private static List<Item> makeTrainingSet() {
+		List<Item> items = new LinkedList<Item>();
+		for (double i = -12; i <= 12; i += 1) {
+			for (double j = -12; j <= 12; j += 1) {
+				items.add(makeItem(i, j));
+			}
+		}
+		return items;
 	}
 
 	private static Item makeItem(double x, double y) {

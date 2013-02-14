@@ -1,8 +1,6 @@
 import java.awt.BorderLayout;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -12,23 +10,24 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import com.lagodiuk.decisiontree.BasicPredicates;
 import com.lagodiuk.decisiontree.DecisionTree;
 import com.lagodiuk.decisiontree.Item;
-import com.lagodiuk.decisiontree.Predicate;
 
 public class Demo4 {
 
 	public static void main(String[] args) {
-		List<Item> items = getTrainingData();
 
-		Map<String, List<? extends Predicate>> attributesPredicates = new HashMap<String, List<? extends Predicate>>();
-		attributesPredicates.put("Outlook", Arrays.asList(BasicPredicates.EQUAL));
-		attributesPredicates.put("Windy", Arrays.asList(BasicPredicates.EQUAL));
+		DecisionTree.Config config =
+				new DecisionTree.Config()
+						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
+						.setAttributePredicates("Outlook", Arrays.asList(BasicPredicates.EQUAL))
+						.setAttributePredicates("Windy", Arrays.asList(BasicPredicates.EQUAL))
+						.setTrainingSet(makeTrainingSet());
 
-		DecisionTree dt = DecisionTree.build(items, attributesPredicates, Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE));
+		DecisionTree dt = DecisionTree.build(config);
 
 		display(dt.getTree(), 400, 500);
 	}
 
-	private static List<Item> getTrainingData() {
+	private static List<Item> makeTrainingSet() {
 		return Arrays.asList(
 				makeItem("sunny", 85, 85, false, "Don't Play"),
 				makeItem("sunny", 80, 90, true, "Don't Play"),
