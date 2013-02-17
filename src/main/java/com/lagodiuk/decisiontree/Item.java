@@ -9,9 +9,9 @@ public class Item {
 
 	private Map<String, Object> fields = new HashMap<String, Object>();
 
-	private String category;
+	private Object category;
 
-	public String getCategory() {
+	public Object getCategory() {
 		return this.category;
 	}
 
@@ -19,7 +19,7 @@ public class Item {
 		return Collections.unmodifiableMap(this.fields);
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Object category) {
 		this.category = category;
 	}
 

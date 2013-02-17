@@ -12,6 +12,10 @@ import com.lagodiuk.decisiontree.Item;
 
 public class Demo {
 
+	private static enum Result {
+		WIN, LOOSE
+	}
+
 	public static void main(String[] args) {
 
 		DecisionTree classifier =
@@ -19,13 +23,13 @@ public class Demo {
 						.createFactory()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL))
 						.setTrainingSet(Arrays.asList(
-								makeItem("Выше", "Дома", "На месте", "Да", "Loose"),
-								makeItem("Выше", "Дома", "На месте", "Нет", "Win"),
-								makeItem("Выше", "Дома", "Пропускают", "Нет", "Loose"),
-								makeItem("Ниже", "Дома", "Пропускают", "Нет", "Win"),
-								makeItem("Ниже", "В гостях", "Пропускают", "Нет", "Loose"),
-								makeItem("Ниже", "Дома", "Пропускают", "Да", "Win"),
-								makeItem("Выше", "В гостях", "На месте", "Да", "Loose")))
+								makeItem("Выше", "Дома", "На месте", "Да", Result.LOOSE),
+								makeItem("Выше", "Дома", "На месте", "Нет", Result.WIN),
+								makeItem("Выше", "Дома", "Пропускают", "Нет", Result.LOOSE),
+								makeItem("Ниже", "Дома", "Пропускают", "Нет", Result.WIN),
+								makeItem("Ниже", "В гостях", "Пропускают", "Нет", Result.LOOSE),
+								makeItem("Ниже", "Дома", "Пропускают", "Да", Result.WIN),
+								makeItem("Выше", "В гостях", "На месте", "Да", Result.LOOSE)))
 						.createDecisionTree();
 
 		display(classifier.getTree(), 300, 300);
@@ -33,10 +37,10 @@ public class Demo {
 		System.out.println(classifier.classify(makeItem("Ниже", "Дома", "На месте", "Нет", null)));
 	}
 
-	private static Item makeItem(String sopernik, String igraem, String lideru, String dojd, String win) {
+	private static Item makeItem(String sopernik, String igraem, String lideru, String dojd, Result category) {
 		Item item = new Item();
 
-		item.setCategory(win);
+		item.setCategory(category);
 
 		item.setAttribute("Соперник", sopernik);
 		item.setAttribute("Играем", igraem);

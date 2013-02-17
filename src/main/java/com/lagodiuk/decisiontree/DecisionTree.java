@@ -20,11 +20,11 @@ public class DecisionTree {
 		this.tree = tree;
 	}
 
-	public String classify(Item item) {
+	public Object classify(Item item) {
 		return this.classify(item, this.tree);
 	}
 
-	private String classify(Item item, DefaultMutableTreeNode node) {
+	private Object classify(Item item, DefaultMutableTreeNode node) {
 		Object nodeData = node.getUserObject();
 
 		if (Rule.class.isInstance(nodeData)) {
@@ -38,7 +38,7 @@ public class DecisionTree {
 				return this.classify(item, notMatchNode);
 			}
 		} else {
-			return nodeData.toString();
+			return nodeData;
 		}
 	}
 
@@ -88,19 +88,19 @@ public class DecisionTree {
 	}
 
 	private static DefaultMutableTreeNode makeLeaf(List<Item> items) {
-		List<String> categories = getCategories(items);
-		String category = getMostFrequentCategory(categories);
+		List<Object> categories = getCategories(items);
+		Object category = getMostFrequentCategory(categories);
 		return new DefaultMutableTreeNode(category);
 	}
 
-	private static String getMostFrequentCategory(List<String> categories) {
-		Map<String, Integer> categoryCountMap = groupAndCount(categories);
+	private static Object getMostFrequentCategory(List<Object> categories) {
+		Map<Object, Integer> categoryCountMap = groupAndCount(categories);
 
-		String mostFrequentCategory = null;
+		Object mostFrequentCategory = null;
 		int mostFrequentCategoryCount = -1;
 
-		for (Entry<String, Integer> e : categoryCountMap.entrySet()) {
-			String category = e.getKey();
+		for (Entry<Object, Integer> e : categoryCountMap.entrySet()) {
+			Object category = e.getKey();
 			int count = e.getValue();
 
 			if (count >= mostFrequentCategoryCount) {
@@ -190,8 +190,8 @@ public class DecisionTree {
 	}
 
 	private static double entropy(List<Item> items) {
-		List<String> categories = getCategories(items);
-		Map<String, Integer> categoryCount = groupAndCount(categories);
+		List<Object> categories = getCategories(items);
+		Map<Object, Integer> categoryCount = groupAndCount(categories);
 		return entropy(categoryCount.values());
 	}
 
@@ -209,18 +209,17 @@ public class DecisionTree {
 		return entropy;
 	}
 
-	private static List<String> getCategories(List<Item> items) {
-		List<String> categories = new LinkedList<String>();
+	private static List<Object> getCategories(List<Item> items) {
+		List<Object> categories = new LinkedList<Object>();
 		for (Item item : items) {
 			categories.add(item.getCategory());
 		}
 		return categories;
 	}
 
-	private static Map<String, Integer> groupAndCount(List<String> categories) {
-		Map<String, Integer> categoryCount = new HashMap<String, Integer>();
-		for (String item : categories) {
-			String cat = item;
+	private static Map<Object, Integer> groupAndCount(List<Object> categories) {
+		Map<Object, Integer> categoryCount = new HashMap<Object, Integer>();
+		for (Object cat : categories) {
 			Integer count = categoryCount.get(cat);
 			if (count == null) {
 				count = 0;
