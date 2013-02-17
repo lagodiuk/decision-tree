@@ -4,13 +4,13 @@ public class Rule {
 
 	private final String attribute;
 
-	private final Predicate condition;
+	private final Predicate predicate;
 
 	private final Object sampleValue;
 
-	public Rule(String attribute, Predicate condition, Object sampleValue) {
+	public Rule(String attribute, Predicate predicate, Object sampleValue) {
 		this.attribute = attribute;
-		this.condition = condition;
+		this.predicate = predicate;
 		this.sampleValue = sampleValue;
 	}
 
@@ -19,11 +19,23 @@ public class Rule {
 			return false;
 		}
 		Object otherField = item.getFieldValue(this.attribute);
-		return this.condition.eval(otherField, this.sampleValue);
+		return this.predicate.eval(otherField, this.sampleValue);
+	}
+
+	public String getAttribute() {
+		return this.attribute;
+	}
+
+	public Predicate getPredicate() {
+		return this.predicate;
+	}
+
+	public Object getSampleValue() {
+		return this.sampleValue;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s %s %s", this.attribute, this.condition, this.sampleValue);
+		return String.format("%s %s %s", this.attribute, this.predicate, this.sampleValue);
 	}
 }
