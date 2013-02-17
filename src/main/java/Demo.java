@@ -20,7 +20,7 @@ public class Demo {
 
 		DecisionTree classifier =
 				DecisionTree
-						.createFactory()
+						.createBuilder()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL))
 						.setTrainingSet(Arrays.asList(
 								makeItem("Выше", "Дома", "На месте", "Да", Result.LOOSE),
@@ -32,7 +32,7 @@ public class Demo {
 								makeItem("Выше", "В гостях", "На месте", "Да", Result.LOOSE)))
 						.createDecisionTree();
 
-		display(classifier.getTree(), 300, 300);
+		display(classifier.getSwingTree(), 300, 300);
 
 		System.out.println(classifier.classify(makeItem("Ниже", "Дома", "На месте", "Нет", null)));
 	}

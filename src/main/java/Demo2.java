@@ -22,12 +22,12 @@ public class Demo2 {
 
 		DecisionTree classifier =
 				DecisionTree
-						.createFactory()
+						.createBuilder()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
 						.setTrainingSet(makeTrainingSet())
 						.createDecisionTree();
 
-		display(classifier.getTree(), 300, 300);
+		display(classifier.getSwingTree(), 300, 300);
 
 		JFrame f1 = new JFrame();
 		f1.setSize(300, 300);

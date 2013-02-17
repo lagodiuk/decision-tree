@@ -3,7 +3,6 @@ package com.lagodiuk.decisiontree;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,28 +34,12 @@ public class DecisionTree {
 		}
 	}
 
-	public void setRule(Rule rule) {
-		this.rule = rule;
-	}
-
-	public void setCategory(Object category) {
-		this.category = category;
-	}
-
-	public void setMatchSubTree(DecisionTree matchSubTree) {
-		this.matchSubTree = matchSubTree;
-	}
-
-	public void setNotMatchSubTree(DecisionTree notMatchSubTree) {
-		this.notMatchSubTree = notMatchSubTree;
-	}
-
-	public DefaultMutableTreeNode getTree() {
+	public DefaultMutableTreeNode getSwingTree() {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 		if (this.rule != null) {
 			root.setUserObject(this.rule.toString());
-			root.add(this.matchSubTree.getTree());
-			root.add(this.notMatchSubTree.getTree());
+			root.add(this.matchSubTree.getSwingTree());
+			root.add(this.notMatchSubTree.getSwingTree());
 		} else {
 			root.setUserObject(this.category.toString());
 		}
@@ -64,11 +47,11 @@ public class DecisionTree {
 		return root;
 	}
 
-	public static Factory createFactory() {
-		return new Factory();
+	public static DecisionTreeBuilder createBuilder() {
+		return new DecisionTreeBuilder();
 	}
 
-	private static DecisionTree buildDTree(
+	public static DecisionTree buildDTree(
 			List<Item> items,
 			int minimalNumberOfItems,
 			Map<String, List<? extends Predicate>> attributesPredicates,
@@ -100,9 +83,9 @@ public class DecisionTree {
 				buildDTree(splitResult.notMatched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		DecisionTree root = new DecisionTree();
-		root.setRule(splitResult.rule);
-		root.setMatchSubTree(matchSubTree);
-		root.setNotMatchSubTree(notMatchSubTree);
+		root.rule = splitResult.rule;
+		root.matchSubTree = matchSubTree;
+		root.notMatchSubTree = notMatchSubTree;
 		return root;
 	}
 
@@ -110,7 +93,7 @@ public class DecisionTree {
 		List<Object> categories = getCategories(items);
 		Object category = getMostFrequentCategory(categories);
 		DecisionTree leaf = new DecisionTree();
-		leaf.setCategory(category);
+		leaf.category = category;
 		return leaf;
 	}
 
@@ -262,79 +245,6 @@ public class DecisionTree {
 			this.rule = rule;
 			this.matched = new ArrayList<Item>(matched);
 			this.notMatched = new ArrayList<Item>(notMatched);
-		}
-	}
-
-	public static class Factory {
-
-		private List<Item> trainingSet;
-
-		private List<? extends Predicate> defaultPredicates = new LinkedList<Predicate>();
-
-		private Map<String, List<? extends Predicate>> attributesPredicates = new HashMap<String, List<? extends Predicate>>();
-
-		private Set<String> ignoredAttributes = new HashSet<String>();
-
-		private int minimalNumberOfItems = 1;
-
-		private Factory() {
-			// encapsulate
-		}
-
-		public DecisionTree createDecisionTree() {
-			DecisionTree tree = buildDTree(
-					this.trainingSet,
-					this.minimalNumberOfItems,
-					this.attributesPredicates,
-					this.defaultPredicates,
-					this.ignoredAttributes);
-
-			return tree;
-		}
-
-		public List<Item> getTrainingSet() {
-			return this.trainingSet;
-		}
-
-		public Factory setTrainingSet(List<Item> trainingSet) {
-			this.trainingSet = trainingSet;
-			return this;
-		}
-
-		public List<? extends Predicate> getDefaultPredicates() {
-			return this.defaultPredicates;
-		}
-
-		public Factory setDefaultPredicates(List<? extends Predicate> defaultPredicates) {
-			this.defaultPredicates = defaultPredicates;
-			return this;
-		}
-
-		public Map<String, List<? extends Predicate>> getAttributesPredicates() {
-			return this.attributesPredicates;
-		}
-
-		public Factory setAttributePredicates(String attribute, List<? extends Predicate> predicates) {
-			this.attributesPredicates.put(attribute, predicates);
-			return this;
-		}
-
-		public Set<String> getIgnoredAttributes() {
-			return this.ignoredAttributes;
-		}
-
-		public Factory setIgnoredAttributes(Set<String> ignoredAttributes) {
-			this.ignoredAttributes = ignoredAttributes;
-			return this;
-		}
-
-		public Factory setMinimalNumberOfItems(int minimalNumberOfItems) {
-			this.minimalNumberOfItems = minimalNumberOfItems;
-			return this;
-		}
-
-		public int getMinimalNumberOfItems() {
-			return this.minimalNumberOfItems;
 		}
 	}
 }

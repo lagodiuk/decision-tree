@@ -17,14 +17,14 @@ public class Demo4 {
 
 		DecisionTree dt =
 				DecisionTree
-						.createFactory()
+						.createBuilder()
 						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
 						.setAttributePredicates("Outlook", Arrays.asList(BasicPredicates.EQUAL))
 						.setAttributePredicates("Windy", Arrays.asList(BasicPredicates.EQUAL))
 						.setTrainingSet(makeTrainingSet())
 						.createDecisionTree();
 
-		display(dt.getTree(), 400, 500);
+		display(dt.getSwingTree(), 400, 500);
 	}
 
 	private static List<Item> makeTrainingSet() {
