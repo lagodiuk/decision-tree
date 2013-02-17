@@ -14,43 +14,61 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 public class DecisionTree {
 
-	private final DefaultMutableTreeNode tree;
+	private Rule rule;
 
-	private DecisionTree(DefaultMutableTreeNode tree) {
-		this.tree = tree;
-	}
+	private Object category;
+
+	private DecisionTree matchSubTree;
+
+	private DecisionTree notMatchSubTree;
 
 	public Object classify(Item item) {
-		return this.classify(item, this.tree);
-	}
+		if (this.rule != null) {
 
-	private Object classify(Item item, DefaultMutableTreeNode node) {
-		Object nodeData = node.getUserObject();
-
-		if (Rule.class.isInstance(nodeData)) {
-			Rule rule = (Rule) nodeData;
-
-			if (rule.match(item)) {
-				DefaultMutableTreeNode matchNode = (DefaultMutableTreeNode) node.getChildAt(0);
-				return this.classify(item, matchNode);
+			if (this.rule.match(item)) {
+				return this.matchSubTree.classify(item);
 			} else {
-				DefaultMutableTreeNode notMatchNode = (DefaultMutableTreeNode) node.getChildAt(1);
-				return this.classify(item, notMatchNode);
+				return this.notMatchSubTree.classify(item);
 			}
 		} else {
-			return nodeData;
+			return this.category;
 		}
 	}
 
+	public void setRule(Rule rule) {
+		this.rule = rule;
+	}
+
+	public void setCategory(Object category) {
+		this.category = category;
+	}
+
+	public void setMatchSubTree(DecisionTree matchSubTree) {
+		this.matchSubTree = matchSubTree;
+	}
+
+	public void setNotMatchSubTree(DecisionTree notMatchSubTree) {
+		this.notMatchSubTree = notMatchSubTree;
+	}
+
 	public DefaultMutableTreeNode getTree() {
-		return this.tree;
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+		if (this.rule != null) {
+			root.setUserObject(this.rule.toString());
+			root.add(this.matchSubTree.getTree());
+			root.add(this.notMatchSubTree.getTree());
+		} else {
+			root.setUserObject(this.category.toString());
+		}
+
+		return root;
 	}
 
 	public static Factory createFactory() {
 		return new Factory();
 	}
 
-	private static DefaultMutableTreeNode buildTree(
+	private static DecisionTree buildDTree(
 			List<Item> items,
 			int minimalNumberOfItems,
 			Map<String, List<? extends Predicate>> attributesPredicates,
@@ -58,39 +76,42 @@ public class DecisionTree {
 			Set<String> ignoredAttributes) {
 
 		if (items.size() <= minimalNumberOfItems) {
-			return makeLeaf(items);
+			return makeDLeaf(items);
 		}
 
 		double entropy = entropy(items);
 
 		if (Double.compare(entropy, 0) == 0) {
 			// all categories the same
-			return makeLeaf(items);
+			return makeDLeaf(items);
 		}
 
 		SplitResult splitResult = findBestSplit(items, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		if (splitResult == null) {
 			// can't find split which reduces entropy
-			return makeLeaf(items);
+			return makeDLeaf(items);
 		}
 
-		DefaultMutableTreeNode matchSubTree =
-				buildTree(splitResult.matched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
+		DecisionTree matchSubTree =
+				buildDTree(splitResult.matched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
 
-		DefaultMutableTreeNode notMatchSubTree =
-				buildTree(splitResult.notMatched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
+		DecisionTree notMatchSubTree =
+				buildDTree(splitResult.notMatched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(splitResult.rule);
-		root.add(matchSubTree);
-		root.add(notMatchSubTree);
+		DecisionTree root = new DecisionTree();
+		root.setRule(splitResult.rule);
+		root.setMatchSubTree(matchSubTree);
+		root.setNotMatchSubTree(notMatchSubTree);
 		return root;
 	}
 
-	private static DefaultMutableTreeNode makeLeaf(List<Item> items) {
+	private static DecisionTree makeDLeaf(List<Item> items) {
 		List<Object> categories = getCategories(items);
 		Object category = getMostFrequentCategory(categories);
-		return new DefaultMutableTreeNode(category);
+		DecisionTree leaf = new DecisionTree();
+		leaf.setCategory(category);
+		return leaf;
 	}
 
 	private static Object getMostFrequentCategory(List<Object> categories) {
@@ -261,14 +282,14 @@ public class DecisionTree {
 		}
 
 		public DecisionTree createDecisionTree() {
-			DefaultMutableTreeNode tree = buildTree(
+			DecisionTree tree = buildDTree(
 					this.trainingSet,
 					this.minimalNumberOfItems,
 					this.attributesPredicates,
 					this.defaultPredicates,
 					this.ignoredAttributes);
 
-			return new DecisionTree(tree);
+			return tree;
 		}
 
 		public List<Item> getTrainingSet() {
