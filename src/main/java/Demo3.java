@@ -2,7 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -24,7 +23,7 @@ public class Demo3 {
 		DecisionTree classifier =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(Arrays.asList(BasicPredicates.GTE, BasicPredicates.LTE))
+						.setDefaultPredicates(BasicPredicates.GTE, BasicPredicates.LTE)
 						.setTrainingSet(makeTrainingSet())
 						.setMinimalNumberOfItems(5)
 						.createDecisionTree();

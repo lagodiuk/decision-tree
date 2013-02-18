@@ -1,5 +1,6 @@
 package com.lagodiuk.decisiontree;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -48,12 +49,22 @@ public class DecisionTreeBuilder {
 		return this;
 	}
 
+	public <T extends Predicate> DecisionTreeBuilder setDefaultPredicates(T... defaultPredicates) {
+		this.defaultPredicates = Arrays.asList(defaultPredicates);
+		return this;
+	}
+
 	public Map<String, List<? extends Predicate>> getAttributesPredicates() {
 		return this.attributesPredicates;
 	}
 
 	public DecisionTreeBuilder setAttributePredicates(String attribute, List<? extends Predicate> predicates) {
 		this.attributesPredicates.put(attribute, predicates);
+		return this;
+	}
+
+	public <T extends Predicate> DecisionTreeBuilder setAttributePredicates(String attribute, T... predicates) {
+		this.attributesPredicates.put(attribute, Arrays.asList(predicates));
 		return this;
 	}
 

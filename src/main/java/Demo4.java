@@ -18,9 +18,9 @@ public class Demo4 {
 		DecisionTree dt =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
-						.setAttributePredicates("Outlook", Arrays.asList(BasicPredicates.EQUAL))
-						.setAttributePredicates("Windy", Arrays.asList(BasicPredicates.EQUAL))
+						.setDefaultPredicates(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE)
+						.setAttributePredicates("Outlook", BasicPredicates.EQUAL)
+						.setAttributePredicates("Windy", BasicPredicates.EQUAL)
 						.setTrainingSet(makeTrainingSet())
 						.createDecisionTree();
 

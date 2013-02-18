@@ -2,7 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class Demo2 {
 		DecisionTree classifier =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE))
+						.setDefaultPredicates(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE)
 						.setTrainingSet(makeTrainingSet())
 						.createDecisionTree();
 

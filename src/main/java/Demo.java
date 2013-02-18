@@ -21,7 +21,7 @@ public class Demo {
 		DecisionTree classifier =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(Arrays.asList(BasicPredicates.EQUAL))
+						.setDefaultPredicates(BasicPredicates.EQUAL)
 						.setTrainingSet(Arrays.asList(
 								makeItem("Выше", "Дома", "На месте", "Да", Result.LOOSE),
 								makeItem("Выше", "Дома", "На месте", "Нет", Result.WIN),
