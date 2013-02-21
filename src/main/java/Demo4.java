@@ -7,7 +7,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.lagodiuk.decisiontree.BasicPredicates;
+import com.lagodiuk.decisiontree.Predicate;
 import com.lagodiuk.decisiontree.DecisionTree;
 import com.lagodiuk.decisiontree.Item;
 
@@ -18,9 +18,9 @@ public class Demo4 {
 		DecisionTree dt =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE)
-						.setAttributePredicates("Outlook", BasicPredicates.EQUAL)
-						.setAttributePredicates("Windy", BasicPredicates.EQUAL)
+						.setDefaultPredicates(Predicate.EQUAL, Predicate.GTE, Predicate.LTE)
+						.setAttributePredicates("Outlook", Predicate.EQUAL)
+						.setAttributePredicates("Windy", Predicate.EQUAL)
 						.setTrainingSet(makeTrainingSet())
 						.createDecisionTree();
 

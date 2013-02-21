@@ -6,7 +6,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.lagodiuk.decisiontree.BasicPredicates;
+import com.lagodiuk.decisiontree.Predicate;
 import com.lagodiuk.decisiontree.DecisionTree;
 import com.lagodiuk.decisiontree.Item;
 
@@ -21,7 +21,7 @@ public class Demo {
 		DecisionTree classifier =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(BasicPredicates.EQUAL)
+						.setDefaultPredicates(Predicate.EQUAL)
 						.setTrainingSet(Arrays.asList(
 								makeItem("Выше", "Дома", "На месте", "Да", Result.LOOSE),
 								makeItem("Выше", "Дома", "На месте", "Нет", Result.WIN),
