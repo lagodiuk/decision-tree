@@ -15,9 +15,6 @@ public class Rule {
 	}
 
 	public boolean match(Item item) {
-		if (!item.hasAttribute(this.attribute)) {
-			return false;
-		}
 		Object otherField = item.getFieldValue(this.attribute);
 		return this.predicate.eval(otherField, this.sampleValue);
 	}

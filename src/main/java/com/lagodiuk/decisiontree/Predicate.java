@@ -1,9 +1,23 @@
 package com.lagodiuk.decisiontree;
 
 public enum Predicate {
+	EXISTS {
+		@Override
+		public boolean eval(Object checkingValue, Object sampleValue) {
+			return checkingValue != null;
+		}
+
+		@Override
+		public String getDescription(String attribute, Object sampleValue) {
+			return String.format("EXISTS %s", attribute);
+		}
+	},
 	EQUAL {
 		@Override
-		public boolean eval(Object sampleValue, Object checkingValue) {
+		public boolean eval(Object checkingValue, Object sampleValue) {
+			if (checkingValue == null) {
+				return false;
+			}
 			return sampleValue.equals(checkingValue);
 		}
 
@@ -16,6 +30,10 @@ public enum Predicate {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		public boolean eval(Object checkingValue, Object sampleValue) {
+			if (checkingValue == null) {
+				return false;
+			}
+
 			Comparable sample = (Comparable) sampleValue;
 			Comparable checking = (Comparable) checkingValue;
 			return checking.compareTo(sample) >= 0;
@@ -30,6 +48,10 @@ public enum Predicate {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		public boolean eval(Object checkingValue, Object sampleValue) {
+			if (checkingValue == null) {
+				return false;
+			}
+
 			Comparable sample = (Comparable) sampleValue;
 			Comparable checking = (Comparable) checkingValue;
 			return checking.compareTo(sample) <= 0;
