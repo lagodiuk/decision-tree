@@ -36,6 +36,6 @@ public class Rule {
 
 	@Override
 	public String toString() {
-		return String.format("%s %s %s", this.attribute, this.predicate, this.sampleValue);
+		return this.predicate.getDescription(this.attribute, this.sampleValue);
 	}
 }

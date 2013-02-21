@@ -8,8 +8,8 @@ public enum Predicate {
 		}
 
 		@Override
-		public String toString() {
-			return "==";
+		public String getDescription(String attribute, Object sampleValue) {
+			return String.format("%s == %s", attribute, sampleValue);
 		}
 	},
 	GTE {
@@ -22,8 +22,8 @@ public enum Predicate {
 		}
 
 		@Override
-		public String toString() {
-			return ">=";
+		public String getDescription(String attribute, Object sampleValue) {
+			return String.format("%s >= %s", attribute, sampleValue);
 		}
 	},
 	LTE {
@@ -36,8 +36,8 @@ public enum Predicate {
 		}
 
 		@Override
-		public String toString() {
-			return "=<";
+		public String getDescription(String attribute, Object sampleValue) {
+			return String.format("%s =< %s", attribute, sampleValue);
 		}
 	};
 
@@ -45,4 +45,7 @@ public enum Predicate {
 		throw new UnsupportedOperationException();
 	}
 
+	public String getDescription(String attribute, Object sampleValue) {
+		throw new UnsupportedOperationException();
+	}
 }
