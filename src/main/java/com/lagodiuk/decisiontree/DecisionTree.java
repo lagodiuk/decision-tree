@@ -34,6 +34,30 @@ public class DecisionTree {
 		}
 	}
 
+	public DecisionTree margeRedundantRules() {
+
+		if (this.matchSubTree != null) {
+			this.matchSubTree.margeRedundantRules();
+		}
+
+		if (this.notMatchSubTree != null) {
+			this.notMatchSubTree.margeRedundantRules();
+		}
+
+		if ((this.rule != null)
+				&& (this.matchSubTree.category != null)
+				&& (this.notMatchSubTree.category != null)
+				&& (this.matchSubTree.category.equals(this.notMatchSubTree.category))) {
+
+			this.category = this.matchSubTree.category;
+			this.rule = null;
+			this.matchSubTree = null;
+			this.notMatchSubTree = null;
+		}
+
+		return this;
+	}
+
 	public DefaultMutableTreeNode getSwingTree() {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 		if (this.rule != null) {

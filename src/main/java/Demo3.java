@@ -26,7 +26,8 @@ public class Demo3 {
 						.setDefaultPredicates(BasicPredicates.GTE, BasicPredicates.LTE)
 						.setTrainingSet(makeTrainingSet())
 						.setMinimalNumberOfItems(5)
-						.createDecisionTree();
+						.createDecisionTree()
+						.margeRedundantRules();
 
 		display(classifier.getSwingTree(), 300, 300);
 

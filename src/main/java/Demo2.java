@@ -24,7 +24,8 @@ public class Demo2 {
 						.createBuilder()
 						.setDefaultPredicates(BasicPredicates.EQUAL, BasicPredicates.GTE, BasicPredicates.LTE)
 						.setTrainingSet(makeTrainingSet())
-						.createDecisionTree();
+						.createDecisionTree()
+						.margeRedundantRules();
 
 		display(classifier.getSwingTree(), 300, 300);
 
