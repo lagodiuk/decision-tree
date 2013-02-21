@@ -27,7 +27,7 @@ public class Demo3 {
 						.setTrainingSet(makeTrainingSet())
 						.setMinimalNumberOfItems(5)
 						.createDecisionTree()
-						.margeRedundantRules();
+						.mergeRedundantRules();
 
 		display(classifier.getSwingTree(), 300, 300);
 

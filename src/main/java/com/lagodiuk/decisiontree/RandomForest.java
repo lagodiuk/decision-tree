@@ -31,7 +31,7 @@ public class RandomForest {
 		RandomForest forest = new RandomForest();
 
 		for (int i = 0; i < 10; i++) {
-			DecisionTree tree = builder.setTrainingSet(getRandomSubset(items)).createDecisionTree().margeRedundantRules();
+			DecisionTree tree = builder.setTrainingSet(getRandomSubset(items)).createDecisionTree().mergeRedundantRules();
 			forest.trees.add(tree);
 		}
 

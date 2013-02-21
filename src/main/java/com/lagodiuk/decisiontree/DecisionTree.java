@@ -34,14 +34,14 @@ public class DecisionTree {
 		}
 	}
 
-	public DecisionTree margeRedundantRules() {
+	public DecisionTree mergeRedundantRules() {
 
 		if (this.matchSubTree != null) {
-			this.matchSubTree.margeRedundantRules();
+			this.matchSubTree.mergeRedundantRules();
 		}
 
 		if (this.notMatchSubTree != null) {
-			this.notMatchSubTree.margeRedundantRules();
+			this.notMatchSubTree.mergeRedundantRules();
 		}
 
 		if ((this.rule != null)

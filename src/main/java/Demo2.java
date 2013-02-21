@@ -25,7 +25,7 @@ public class Demo2 {
 						.setDefaultPredicates(Predicate.EQUAL, Predicate.GTE, Predicate.LTE)
 						.setTrainingSet(makeTrainingSet())
 						.createDecisionTree()
-						.margeRedundantRules();
+						.mergeRedundantRules();
 
 		display(classifier.getSwingTree(), 300, 300);
 
