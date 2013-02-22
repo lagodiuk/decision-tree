@@ -29,7 +29,7 @@ public class Demo5 {
 						.setDefaultPredicates(Predicate.GTE, Predicate.LTE)
 						.setMinimalNumberOfItems(7);
 
-		RandomForest forest = RandomForest.create(makeTrainingSet(), builder);
+		RandomForest forest = RandomForest.create(makeTrainingSet(), builder, 10);
 
 		JFrame f1 = new JFrame();
 		f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
