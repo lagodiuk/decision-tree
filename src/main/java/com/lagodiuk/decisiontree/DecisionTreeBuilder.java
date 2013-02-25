@@ -63,7 +63,7 @@ public class DecisionTreeBuilder {
 		return this;
 	}
 
-	public <T extends Predicate> DecisionTreeBuilder setAttributePredicates(String attribute, T... predicates) {
+	public DecisionTreeBuilder setAttributePredicates(String attribute, Predicate... predicates) {
 		this.attributesPredicates.put(attribute, Arrays.asList(predicates));
 		return this;
 	}

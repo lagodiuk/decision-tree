@@ -84,9 +84,9 @@ public class Demo5 {
 	private static Item makeItem(double x, double y) {
 		Item item = new Item();
 
-		if (((x * x) + (y * y)) <= (10 * 10)) {
+		if ((((x * x) + (y * y)) <= (10 * 10)) && (Math.random() < 0.9)) {
 			item.setCategory("red");
-			if (((x * x) + (y * y)) <= (5 * 5)) {
+			if ((((x * x) + (y * y)) <= (5 * 5)) && (Math.random() < 0.8)) {
 				item.setCategory("green");
 			}
 		} else {
