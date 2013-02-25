@@ -12,9 +12,9 @@ public class DecisionTreeBuilder {
 
 	private List<Item> trainingSet;
 
-	private List<? extends Predicate> defaultPredicates = new LinkedList<Predicate>();
+	private List<Predicate> defaultPredicates = new LinkedList<Predicate>();
 
-	private Map<String, List<? extends Predicate>> attributesPredicates = new HashMap<String, List<? extends Predicate>>();
+	private Map<String, List<Predicate>> attributesPredicates = new HashMap<String, List<Predicate>>();
 
 	private Set<String> ignoredAttributes = new HashSet<String>();
 
@@ -44,21 +44,21 @@ public class DecisionTreeBuilder {
 		return this.defaultPredicates;
 	}
 
-	public DecisionTreeBuilder setDefaultPredicates(List<? extends Predicate> defaultPredicates) {
+	public DecisionTreeBuilder setDefaultPredicates(List<Predicate> defaultPredicates) {
 		this.defaultPredicates = defaultPredicates;
 		return this;
 	}
 
-	public <T extends Predicate> DecisionTreeBuilder setDefaultPredicates(T... defaultPredicates) {
+	public DecisionTreeBuilder setDefaultPredicates(Predicate... defaultPredicates) {
 		this.defaultPredicates = Arrays.asList(defaultPredicates);
 		return this;
 	}
 
-	public Map<String, List<? extends Predicate>> getAttributesPredicates() {
+	public Map<String, List<Predicate>> getAttributesPredicates() {
 		return this.attributesPredicates;
 	}
 
-	public DecisionTreeBuilder setAttributePredicates(String attribute, List<? extends Predicate> predicates) {
+	public DecisionTreeBuilder setAttributePredicates(String attribute, List<Predicate> predicates) {
 		this.attributesPredicates.put(attribute, predicates);
 		return this;
 	}

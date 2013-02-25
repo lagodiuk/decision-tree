@@ -78,8 +78,8 @@ public class DecisionTree {
 	public static DecisionTree buildDTree(
 			List<Item> items,
 			int minimalNumberOfItems,
-			Map<String, List<? extends Predicate>> attributesPredicates,
-			List<? extends Predicate> defaultPredicates,
+			Map<String, List<Predicate>> attributesPredicates,
+			List<Predicate> defaultPredicates,
 			Set<String> ignoredAttributes) {
 
 		if (items.size() <= minimalNumberOfItems) {
@@ -142,8 +142,8 @@ public class DecisionTree {
 
 	private static SplitResult findBestSplit(
 			List<Item> items,
-			Map<String, List<? extends Predicate>> attributesPredicates,
-			List<? extends Predicate> defaultPredicates,
+			Map<String, List<Predicate>> attributesPredicates,
+			List<Predicate> defaultPredicates,
 			Set<String> ignoredAttributes) {
 
 		double initialEntropy = entropy(items);
@@ -202,8 +202,8 @@ public class DecisionTree {
 
 	private static List<Predicate> predicatesForAttribute(
 			String attr,
-			Map<String, List<? extends Predicate>> attributesPredicates,
-			List<? extends Predicate> defaultPredicates) {
+			Map<String, List<Predicate>> attributesPredicates,
+			List<Predicate> defaultPredicates) {
 
 		List<Predicate> predicates = new ArrayList<Predicate>();
 
