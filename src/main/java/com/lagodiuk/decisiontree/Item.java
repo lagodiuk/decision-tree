@@ -19,12 +19,14 @@ public class Item {
 		return Collections.unmodifiableMap(this.fields);
 	}
 
-	public void setCategory(Object category) {
+	public Item setCategory(Object category) {
 		this.category = category;
+		return this;
 	}
 
-	public void setAttribute(String name, Object value) {
+	public Item setAttribute(String name, Object value) {
 		this.fields.put(name, value);
+		return this;
 	}
 
 	public Set<String> getAttributeNames() {

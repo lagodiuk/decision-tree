@@ -6,9 +6,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.lagodiuk.decisiontree.Predicate;
 import com.lagodiuk.decisiontree.DecisionTree;
 import com.lagodiuk.decisiontree.Item;
+import com.lagodiuk.decisiontree.Predicate;
 
 public class Demo {
 
@@ -38,14 +38,12 @@ public class Demo {
 	}
 
 	private static Item makeItem(String sopernik, String igraem, String lideru, String dojd, Result category) {
-		Item item = new Item();
-
-		item.setCategory(category);
-
-		item.setAttribute("Соперник", sopernik);
-		item.setAttribute("Играем", igraem);
-		item.setAttribute("Лидеры", lideru);
-		item.setAttribute("Дождь", dojd);
+		Item item = new Item()
+				.setCategory(category)
+				.setAttribute("Соперник", sopernik)
+				.setAttribute("Играем", igraem)
+				.setAttribute("Лидеры", lideru)
+				.setAttribute("Дождь", dojd);
 
 		return item;
 	}
