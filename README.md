@@ -15,13 +15,12 @@ Build with: Maven <br/>
 <li> git clone git://github.com/lagodiuk/decision-tree.git </li>
 <li> mvn -f decision-tree/pom.xml install </li>
 </ol>
-Add this maven dependency to your project:
-<dependency>
-	<groupId>com.lagodiuk</groupId>
-	<artifactId>decisiontree</artifactId>
-	<version>1.0-SNAPSHOT</version>
-</dependency>
-Simple demo:
+Add this project as a maven dependency to your project.
+
+Simple demo, which trying to classify points inside of the circle:
+![Demo](https://raw.github.com/lagodiuk/decision-tree/master/img/test.png)
+
+Source:
 ```java
 import java.awt.Color;
 import java.awt.image.BufferedImage;
