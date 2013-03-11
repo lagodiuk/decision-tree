@@ -1,3 +1,4 @@
+package com.lagodiuk.decisiontree.demo;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;

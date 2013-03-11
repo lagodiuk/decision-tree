@@ -1,3 +1,4 @@
+package com.lagodiuk.decisiontree.demo;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,7 +17,7 @@ import com.lagodiuk.decisiontree.Item;
 import com.lagodiuk.decisiontree.Predicate;
 import com.lagodiuk.decisiontree.RandomForest;
 
-public class Demo7 {
+public class MainDemo {
 
 	private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
