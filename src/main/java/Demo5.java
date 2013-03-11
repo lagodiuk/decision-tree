@@ -26,10 +26,11 @@ public class Demo5 {
 		DecisionTreeBuilder builder =
 				DecisionTree
 						.createBuilder()
+						.setTrainingSet(makeTrainingSet())
 						.setDefaultPredicates(Predicate.GTE, Predicate.LTE)
 						.setMinimalNumberOfItems(7);
 
-		RandomForest forest = RandomForest.create(makeTrainingSet(), builder, 10);
+		RandomForest forest = RandomForest.create(builder, 10);
 
 		JFrame f1 = new JFrame();
 		f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

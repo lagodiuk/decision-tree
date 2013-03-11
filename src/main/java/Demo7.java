@@ -42,7 +42,7 @@ public class Demo7 {
 
 		DecisionTree tree = tbuilder.createDecisionTree();
 
-		RandomForest forest = RandomForest.create(trainingSet, tbuilder, 7);
+		RandomForest forest = RandomForest.create(tbuilder, 7);
 
 		BufferedImage bi = new BufferedImage((WIDTH * 3) + 2, HEIGHT, BufferedImage.TYPE_INT_RGB);
 		displayTrainingSet(trainingSet, bi);

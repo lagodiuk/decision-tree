@@ -28,8 +28,10 @@ public class RandomForest {
 		return result;
 	}
 
-	public static RandomForest create(List<Item> items, DecisionTreeBuilder builder, int size) {
+	public static RandomForest create(DecisionTreeBuilder builder, int size) {
 		RandomForest forest = new RandomForest();
+
+		List<Item> items = new ArrayList<Item>(builder.getTrainingSet());
 
 		Collections.shuffle(items);
 
