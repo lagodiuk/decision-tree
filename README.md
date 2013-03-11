@@ -14,18 +14,15 @@ Build with: Maven <br/>
 <ol>
 <li> git clone git://github.com/lagodiuk/decision-tree.git </li>
 <li> mvn -f decision-tree/pom.xml install </li>
-<li>
-add it to your project as a maven dependency:
+</ol>
+Add this maven dependency to your project:
 <dependency>
 	<groupId>com.lagodiuk</groupId>
 	<artifactId>decisiontree</artifactId>
 	<version>1.0-SNAPSHOT</version>
 </dependency>
-</li>
-</ol>
 Simple demo:
 ```java
-package com.lagodiuk.decisiontree.demo;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -46,8 +43,6 @@ import com.lagodiuk.decisiontree.RandomForest;
 
 public class MainDemo {
 
-	private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
 	private static final int TRAINING_SET_SIZE = 1000;
 
 	private static final int WIDTH = 150;
@@ -64,7 +59,6 @@ public class MainDemo {
 
 	public static void main(String[] args) throws Exception {
 		List<Item> trainingSet = createTrainingSet();
-		log.info("Training set created");
 
 		DecisionTreeBuilder tbuilder =
 				DecisionTree
@@ -73,14 +67,17 @@ public class MainDemo {
 						.setDefaultPredicates(Predicate.GTE, Predicate.LTE);
 
 		DecisionTree tree = tbuilder.createDecisionTree();
-		log.info("Decision tree created");
 
+		// Creating Random Forest with 7 trees
 		RandomForest forest = RandomForest.create(tbuilder, 7);
-		log.info("Random forest created");
 
 		displayResults(args, trainingSet, tree, forest);
 	}
 
+	/**
+	 * Training set contains red and green points <br/>
+	 * Red points are actually inside of the circle
+	 */
 	private static List<Item> createTrainingSet() {
 		List<Item> items = new ArrayList<Item>(TRAINING_SET_SIZE);
 
@@ -101,28 +98,38 @@ public class MainDemo {
 		return items;
 	}
 
+	/**
+	 * Item is generic entity, which is recognized by decision tree classifier <br/>
+	 * This method is just a wrapper for its constructor
+	 */
 	private static Item newItem(int x, int y) {
 		return new Item()
 				.setAttribute("x", x)
 				.setAttribute("y", y);
 	}
 
+	/**
+	 * Checking that point(x, y) is inside of the circle
+	 */
 	private static boolean isRed(int x, int y) {
 		x = x - (WIDTH / 2);
 		y = y - (HEIGHT / 2);
 		return ((x * x) + (y * y)) <= (RADIUS * RADIUS);
 	}
 
+	/**
+	 * Visualize training set, and results of using of decision tree and random forest to png image
+	 */
 	private static void displayResults(String[] args, List<Item> trainingSet, DecisionTree tree, RandomForest forest) throws IOException {
-		BufferedImage bi = createBufferedImage();
+		BufferedImage img = createBufferedImage();
 
-		displayTrainingSet(trainingSet, bi);
+		displayTrainingSet(trainingSet, img);
 
-		displayDecisionTree(tree, bi);
+		displayDecisionTree(tree, img);
 
-		displayForest(forest, bi);
+		displayForest(forest, img);
 
-		saveToFile(args, bi);
+		saveToFile(args, img);
 	}
 
 	private static BufferedImage createBufferedImage() {
