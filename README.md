@@ -136,46 +136,51 @@ public class MainDemo {
 		return new BufferedImage((WIDTH * 3) + 2, HEIGHT, BufferedImage.TYPE_INT_RGB);
 	}
 
-	private static void displayTrainingSet(List<Item> trainingSet, BufferedImage bi) {
+	private static void displayTrainingSet(List<Item> trainingSet, BufferedImage img) {
 		for (Item item : trainingSet) {
 			int x = (Integer) item.getFieldValue("x");
 			int y = (Integer) item.getFieldValue("y");
 
 			switch (((Type) item.getCategory())) {
 				case RED:
-					bi.setRGB(x, y, Color.RED.getRGB());
+					img.setRGB(x, y, Color.RED.getRGB());
 					break;
 				case GREEN:
-					bi.setRGB(x, y, Color.GREEN.getRGB());
+					img.setRGB(x, y, Color.GREEN.getRGB());
 					break;
 			}
 		}
 	}
 
-	private static void displayDecisionTree(DecisionTree tree, BufferedImage bi) {
+	private static void displayDecisionTree(DecisionTree tree, BufferedImage img) {
 		for (int x = 0; x < WIDTH; x++) {
 			for (int y = 0; y < HEIGHT; y++) {
 
+				// creating item which we want to classify
 				Item item = newItem(x, y);
 
 				switch ((Type) tree.classify(item)) {
 					case RED:
-						bi.setRGB(x + WIDTH + 1, y, Color.RED.getRGB());
+						img.setRGB(x + WIDTH + 1, y, Color.RED.getRGB());
 						break;
 					case GREEN:
-						bi.setRGB(x + WIDTH + 1, y, Color.GREEN.getRGB());
+						img.setRGB(x + WIDTH + 1, y, Color.GREEN.getRGB());
 						break;
 				}
 			}
 		}
 	}
 
-	private static void displayForest(RandomForest forest, BufferedImage bi) {
+	private static void displayForest(RandomForest forest, BufferedImage img) {
 		for (int x = 0; x < WIDTH; x++) {
 			for (int y = 0; y < HEIGHT; y++) {
 
+				// creating item which we want to classify
 				Item item = newItem(x, y);
-
+				
+				// result of classification by random forest is map,
+				// which contains categories, that been suggested by each of decision trees,
+				// and count of each suggestion
 				Map<Object, Integer> result = forest.classify(item);
 
 				int red = 0;
@@ -192,7 +197,7 @@ public class MainDemo {
 				float fRed = ((float) red) / (red + green);
 				float fGreen = ((float) green) / (red + green);
 
-				bi.setRGB(x + (WIDTH * 2) + 2, y, new Color(fRed, fGreen, 0).getRGB());
+				img.setRGB(x + (WIDTH * 2) + 2, y, new Color(fRed, fGreen, 0).getRGB());
 			}
 		}
 	}
