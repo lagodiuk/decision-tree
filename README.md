@@ -120,7 +120,12 @@ public class MainDemo {
 	/**
 	 * Visualize training set, and results of using of decision tree and random forest to png image
 	 */
-	private static void displayResults(String[] args, List<Item> trainingSet, DecisionTree tree, RandomForest forest) throws IOException {
+	private static void displayResults(
+				String[] args, 
+				List<Item> trainingSet, 
+				DecisionTree tree, 
+				RandomForest forest) throws IOException {
+				
 		BufferedImage img = createBufferedImage();
 
 		displayTrainingSet(trainingSet, img);
