@@ -76,6 +76,14 @@ public class DecisionTreeBuilder {
 		this.ignoredAttributes = ignoredAttributes;
 		return this;
 	}
+	
+	public DecisionTreeBuilder setIgnoredAttributes(String... ignoredAttributes) {
+		this.ignoredAttributes = new HashSet<String>(ignoredAttributes.length);
+		for(String attr : ignoredAttributes) {
+			this.ignoredAttributes.add(attr);
+		}
+		return this;
+	}
 
 	public DecisionTreeBuilder setMinimalNumberOfItems(int minimalNumberOfItems) {
 		this.minimalNumberOfItems = minimalNumberOfItems;
