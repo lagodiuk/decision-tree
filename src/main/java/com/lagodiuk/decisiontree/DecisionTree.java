@@ -271,4 +271,28 @@ public class DecisionTree {
 			this.notMatched = new ArrayList<Item>(notMatched);
 		}
 	}
+
+	public void accept(DecisionTreeVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	public boolean isLeaf() {
+		return this.rule == null;
+	}
+
+	public Object getCategory() {
+		return this.category;
+	}
+
+	public Rule getRule() {
+		return this.rule;
+	}
+
+	public DecisionTree getMatchSubTree() {
+		return this.matchSubTree;
+	}
+
+	public DecisionTree getNotMatchSubTree() {
+		return this.notMatchSubTree;
+	}
 }
