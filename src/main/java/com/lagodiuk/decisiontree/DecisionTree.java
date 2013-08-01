@@ -22,15 +22,14 @@ public class DecisionTree {
 	private DecisionTree notMatchSubTree;
 
 	public Object classify(Item item) {
-		if (this.rule != null) {
-
+		if (this.isLeaf()) {
+			return this.category;
+		} else {
 			if (this.rule.match(item)) {
 				return this.matchSubTree.classify(item);
 			} else {
 				return this.notMatchSubTree.classify(item);
 			}
-		} else {
-			return this.category;
 		}
 	}
 
@@ -59,16 +58,33 @@ public class DecisionTree {
 	}
 
 	public DefaultMutableTreeNode getSwingTree() {
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-		if (this.rule != null) {
-			root.setUserObject(this.rule.toString());
-			root.add(this.matchSubTree.getSwingTree());
-			root.add(this.notMatchSubTree.getSwingTree());
-		} else {
-			root.setUserObject(this.category.toString());
-		}
+		SwingTreeVisitor visitor = new SwingTreeVisitor();
+		this.accept(visitor);
+		return visitor.getRoot();
+	}
 
-		return root;
+	public void accept(DecisionTreeVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	public boolean isLeaf() {
+		return this.rule == null;
+	}
+
+	public Object getCategory() {
+		return this.category;
+	}
+
+	public Rule getRule() {
+		return this.rule;
+	}
+
+	public DecisionTree getMatchSubTree() {
+		return this.matchSubTree;
+	}
+
+	public DecisionTree getNotMatchSubTree() {
+		return this.notMatchSubTree;
 	}
 
 	public static DecisionTreeBuilder createBuilder() {
@@ -272,27 +288,50 @@ public class DecisionTree {
 		}
 	}
 
-	public void accept(DecisionTreeVisitor visitor) {
-		visitor.visit(this);
-	}
+	private static class SwingTreeVisitor implements DecisionTreeVisitor {
 
-	public boolean isLeaf() {
-		return this.rule == null;
-	}
+		private DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 
-	public Object getCategory() {
-		return this.category;
-	}
+		@Override
+		public void visit(DecisionTree tree) {
+			if (tree.rule != null) {
+				String description = null;
 
-	public Rule getRule() {
-		return this.rule;
-	}
+				Predicate predicate = tree.rule.getPredicate();
+				String attribute = tree.rule.getAttribute();
+				Object value = tree.rule.getSampleValue();
+				switch (predicate) {
+					case EQUAL:
+						description = attribute + " == " + value;
+						break;
 
-	public DecisionTree getMatchSubTree() {
-		return this.matchSubTree;
-	}
+					case EXISTS:
+						description = "exists " + attribute;
+						break;
 
-	public DecisionTree getNotMatchSubTree() {
-		return this.notMatchSubTree;
+					case GTE:
+						description = attribute + " >= " + value;
+						break;
+
+					case LTE:
+						description = attribute + " =< " + value;
+						break;
+
+					default:
+						description = attribute + predicate.toString() + value;
+						break;
+				}
+
+				this.root.setUserObject(description);
+				this.root.add(tree.matchSubTree.getSwingTree());
+				this.root.add(tree.notMatchSubTree.getSwingTree());
+			} else {
+				this.root.setUserObject(tree.category.toString());
+			}
+		}
+
+		public DefaultMutableTreeNode getRoot() {
+			return this.root;
+		}
 	}
 }

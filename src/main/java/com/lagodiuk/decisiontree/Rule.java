@@ -30,9 +30,4 @@ public class Rule {
 	public Object getSampleValue() {
 		return this.sampleValue;
 	}
-
-	@Override
-	public String toString() {
-		return this.predicate.getDescription(this.attribute, this.sampleValue);
-	}
 }

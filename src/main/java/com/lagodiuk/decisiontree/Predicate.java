@@ -6,11 +6,6 @@ public enum Predicate {
 		public boolean eval(Object checkingValue, Object sampleValue) {
 			return checkingValue != null;
 		}
-
-		@Override
-		public String getDescription(String attribute, Object sampleValue) {
-			return String.format("EXISTS %s", attribute);
-		}
 	},
 	EQUAL {
 		@Override
@@ -19,11 +14,6 @@ public enum Predicate {
 				return false;
 			}
 			return sampleValue.equals(checkingValue);
-		}
-
-		@Override
-		public String getDescription(String attribute, Object sampleValue) {
-			return String.format("%s == %s", attribute, sampleValue);
 		}
 	},
 	GTE {
@@ -38,11 +28,6 @@ public enum Predicate {
 			Comparable checking = (Comparable) checkingValue;
 			return checking.compareTo(sample) >= 0;
 		}
-
-		@Override
-		public String getDescription(String attribute, Object sampleValue) {
-			return String.format("%s >= %s", attribute, sampleValue);
-		}
 	},
 	LTE {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -56,18 +41,9 @@ public enum Predicate {
 			Comparable checking = (Comparable) checkingValue;
 			return checking.compareTo(sample) <= 0;
 		}
-
-		@Override
-		public String getDescription(String attribute, Object sampleValue) {
-			return String.format("%s =< %s", attribute, sampleValue);
-		}
 	};
 
 	public boolean eval(Object sampleValue, Object checkingValue) {
-		throw new UnsupportedOperationException();
-	}
-
-	public String getDescription(String attribute, Object sampleValue) {
 		throw new UnsupportedOperationException();
 	}
 }
