@@ -6,11 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class RandomForest {
-
-	private static final Random random = new Random();
 
 	private List<DecisionTree> trees = new ArrayList<DecisionTree>();
 
@@ -41,7 +38,7 @@ public class RandomForest {
 			List<Item> trainingSet = new ArrayList<Item>();
 
 			trainingSet.addAll(items.subList(i * chunkSize, (i + 1) * chunkSize));
-			trainingSet.addAll(getRandomSubset(items));
+			trainingSet.addAll(getRandomSubset(items, i + 1));
 
 			DecisionTree tree = builder.setTrainingSet(trainingSet).createDecisionTree().mergeRedundantRules();
 			forest.trees.add(tree);
@@ -50,12 +47,14 @@ public class RandomForest {
 		return forest;
 	}
 
-	private static List<Item> getRandomSubset(List<Item> items) {
+	private static List<Item> getRandomSubset(List<Item> items, int numberOfTree) {
 		int itemsCount = items.size();
 
 		List<Item> result = new LinkedList<Item>();
-		for (int i = 0; i < (itemsCount * 0.5); i++) {
-			result.add(items.get(random.nextInt(itemsCount)));
+		for (int i = 0; i < itemsCount; i++) {
+			if ((i % numberOfTree) != 0) {
+				result.add(items.get(i));
+			}
 		}
 
 		return result;
