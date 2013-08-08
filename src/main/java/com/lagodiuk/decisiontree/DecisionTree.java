@@ -45,35 +45,35 @@ public class DecisionTree {
 
 	public Object classify(Item item) {
 		if (this.isLeaf()) {
-			return this.category;
+			return this.getCategory();
 		} else {
-			if (this.rule.match(item)) {
-				return this.matchSubTree.classify(item);
+			if (this.getRule().match(item)) {
+				return this.getMatchSubTree().classify(item);
 			} else {
-				return this.notMatchSubTree.classify(item);
+				return this.getNotMatchSubTree().classify(item);
 			}
 		}
 	}
 
 	public DecisionTree mergeRedundantRules() {
 
-		if (this.matchSubTree != null) {
-			this.matchSubTree.mergeRedundantRules();
+		if (this.getMatchSubTree() != null) {
+			this.getMatchSubTree().mergeRedundantRules();
 		}
 
-		if (this.notMatchSubTree != null) {
-			this.notMatchSubTree.mergeRedundantRules();
+		if (this.getNotMatchSubTree() != null) {
+			this.getNotMatchSubTree().mergeRedundantRules();
 		}
 
-		if ((this.rule != null)
-				&& (this.matchSubTree.category != null)
-				&& (this.notMatchSubTree.category != null)
-				&& (this.matchSubTree.category.equals(this.notMatchSubTree.category))) {
+		if ((this.getRule() != null)
+				&& (this.getMatchSubTree().getCategory() != null)
+				&& (this.getNotMatchSubTree().getCategory() != null)
+				&& (this.getMatchSubTree().getCategory().equals(this.getNotMatchSubTree().getCategory()))) {
 
-			this.category = this.matchSubTree.category;
-			this.rule = null;
-			this.matchSubTree = null;
-			this.notMatchSubTree = null;
+			this.setCategory(this.getMatchSubTree().getCategory());
+			this.setRule(null);
+			this.setMatchSubTree(null);
+			this.setNotMatchSubTree(null);
 		}
 
 		return this;
@@ -90,7 +90,7 @@ public class DecisionTree {
 	}
 
 	public boolean isLeaf() {
-		return this.rule == null;
+		return this.getRule() == null;
 	}
 
 	public Object getCategory() {
@@ -145,9 +145,9 @@ public class DecisionTree {
 				buildDTree(splitResult.notMatched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		DecisionTree root = new DecisionTree();
-		root.rule = splitResult.rule;
-		root.matchSubTree = matchSubTree;
-		root.notMatchSubTree = notMatchSubTree;
+		root.setRule(splitResult.rule);
+		root.setMatchSubTree(matchSubTree);
+		root.setNotMatchSubTree(notMatchSubTree);
 		return root;
 	}
 
@@ -155,7 +155,7 @@ public class DecisionTree {
 		List<Object> categories = getCategories(items);
 		Object category = getMostFrequentCategory(categories);
 		DecisionTree leaf = new DecisionTree();
-		leaf.category = category;
+		leaf.setCategory(category);
 		return leaf;
 	}
 
@@ -295,6 +295,22 @@ public class DecisionTree {
 		return categoryCount;
 	}
 
+	public void setCategory(Object category) {
+		this.category = category;
+	}
+
+	public void setRule(Rule rule) {
+		this.rule = rule;
+	}
+
+	public void setMatchSubTree(DecisionTree matchSubTree) {
+		this.matchSubTree = matchSubTree;
+	}
+
+	public void setNotMatchSubTree(DecisionTree notMatchSubTree) {
+		this.notMatchSubTree = notMatchSubTree;
+	}
+
 	private static class SplitResult {
 
 		public final Rule rule;
@@ -316,12 +332,12 @@ public class DecisionTree {
 
 		@Override
 		public void visit(DecisionTree tree) {
-			if (tree.rule != null) {
+			if (tree.getRule() != null) {
 				String description = null;
 
-				Predicate predicate = tree.rule.getPredicate();
-				String attribute = tree.rule.getAttribute();
-				Object value = tree.rule.getSampleValue();
+				Predicate predicate = tree.getRule().getPredicate();
+				String attribute = tree.getRule().getAttribute();
+				Object value = tree.getRule().getSampleValue();
 				switch (predicate) {
 					case EQUAL:
 						description = attribute + " == " + value;
@@ -345,10 +361,10 @@ public class DecisionTree {
 				}
 
 				this.root.setUserObject(description);
-				this.root.add(tree.matchSubTree.getSwingTree());
-				this.root.add(tree.notMatchSubTree.getSwingTree());
+				this.root.add(tree.getMatchSubTree().getSwingTree());
+				this.root.add(tree.getNotMatchSubTree().getSwingTree());
 			} else {
-				this.root.setUserObject(tree.category.toString());
+				this.root.setUserObject(tree.getCategory().toString());
 			}
 		}
 

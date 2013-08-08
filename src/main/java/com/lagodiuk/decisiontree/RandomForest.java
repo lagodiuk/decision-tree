@@ -82,4 +82,14 @@ public class RandomForest {
 		return result;
 	}
 
+	public List<DecisionTree> getTrees() {
+		return Collections.unmodifiableList(this.trees);
+	}
+
+	public void setTrees(List<DecisionTree> trees) {
+		this.trees.clear();
+		if (trees != null) {
+			this.trees.addAll(trees);
+		}
+	}
 }
