@@ -19,7 +19,7 @@ Add this project as a maven dependency to your project.
 
 Simple demo, which trying to classify points inside of the circle:
 
-![Demo](https://raw.github.com/lagodiuk/decision-tree/master/img/test.png)
+![Demo](https://raw.github.com/lagodiuk/decision-tree/master/img/test_0.png)
 
 Source:
 ```java
