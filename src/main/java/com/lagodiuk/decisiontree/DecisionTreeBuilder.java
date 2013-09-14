@@ -53,6 +53,11 @@ public class DecisionTreeBuilder {
 		return tree;
 	}
 
+	
+	public RandomForest createRandomForest(int numberOfTrees) {
+		return RandomForest.create(this, numberOfTrees);
+	}
+	
 	public List<Item> getTrainingSet() {
 		return this.trainingSet;
 	}

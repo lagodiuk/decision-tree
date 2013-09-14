@@ -69,7 +69,7 @@ public class MainDemo {
 		DecisionTree tree = tbuilder.createDecisionTree();
 
 		// Creating Random Forest with 7 trees
-		RandomForest forest = RandomForest.create(tbuilder, 7);
+		RandomForest forest = tbuilder.createRandomForest(7);
 
 		displayResults(args, trainingSet, tree, forest);
 	}
