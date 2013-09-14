@@ -43,7 +43,7 @@ public class DecisionTreeBuilder {
 	private int minimalNumberOfItems = 1;
 
 	public DecisionTree createDecisionTree() {
-		DecisionTree tree = DecisionTree.buildDTree(
+		DecisionTree tree = DecisionTree.buildDecisionTree(
 				this.trainingSet,
 				this.minimalNumberOfItems,
 				this.attributesPredicates,

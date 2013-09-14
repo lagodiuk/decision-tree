@@ -113,7 +113,7 @@ public class DecisionTree {
 		return new DecisionTreeBuilder();
 	}
 
-	public static DecisionTree buildDTree(
+	public static DecisionTree buildDecisionTree(
 			List<Item> items,
 			int minimalNumberOfItems,
 			Map<String, List<Predicate>> attributesPredicates,
@@ -139,10 +139,10 @@ public class DecisionTree {
 		}
 
 		DecisionTree matchSubTree =
-				buildDTree(splitResult.matched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
+				buildDecisionTree(splitResult.matched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		DecisionTree notMatchSubTree =
-				buildDTree(splitResult.notMatched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
+				buildDecisionTree(splitResult.notMatched, minimalNumberOfItems, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		DecisionTree root = new DecisionTree();
 		root.setRule(splitResult.rule);
