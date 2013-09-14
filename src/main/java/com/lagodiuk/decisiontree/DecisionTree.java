@@ -25,6 +25,7 @@ package com.lagodiuk.decisiontree;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -183,13 +184,15 @@ public class DecisionTree {
 			Map<String, List<Predicate>> attributesPredicates,
 			List<Predicate> defaultPredicates,
 			Set<String> ignoredAttributes) {
-
+		
 		double initialEntropy = entropy(items);
 
 		double bestGain = 0;
 
 		SplitResult bestSplitResult = null;
-
+		
+		Set<Rule> testedRules = new HashSet<Rule>();
+		
 		for (Item baseItem : new LinkedList<Item>(items)) {
 			for (String attr : baseItem.getAttributeNames()) {
 
@@ -203,6 +206,12 @@ public class DecisionTree {
 
 				for (Predicate pred : predicates) {
 					Rule rule = new Rule(attr, pred, value);
+					
+					// Avoid checking the slit by the same rules more than once
+					if(testedRules.contains(rule)) {
+						continue;
+					}
+					testedRules.add(rule);
 
 					SplitResult splitResult = split(rule, items);
 
