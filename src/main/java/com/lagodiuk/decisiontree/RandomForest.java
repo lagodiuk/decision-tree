@@ -54,13 +54,10 @@ public class RandomForest {
 
 		Collections.shuffle(items);
 
-		int chunkSize = items.size() / size;
-
 		for (int i = 0; i < size; i++) {
 			List<Item> trainingSet = new ArrayList<Item>();
 
-			trainingSet.addAll(items.subList(i * chunkSize, (i + 1) * chunkSize));
-			trainingSet.addAll(getRandomSubset(items, i + 1));
+			trainingSet.addAll(getRandomSubset(items, i + 2));
 
 			DecisionTree tree = builder.setTrainingSet(trainingSet).createDecisionTree().mergeRedundantRules();
 			forest.trees.add(tree);
@@ -69,12 +66,12 @@ public class RandomForest {
 		return forest;
 	}
 
-	private static List<Item> getRandomSubset(List<Item> items, int numberOfTree) {
+	private static List<Item> getRandomSubset(List<Item> items, int excepted) {
 		int itemsCount = items.size();
 
 		List<Item> result = new LinkedList<Item>();
 		for (int i = 0; i < itemsCount; i++) {
-			if ((i % numberOfTree) != 0) {
+			if ((i % excepted) != 0) {
 				result.add(items.get(i));
 			}
 		}
