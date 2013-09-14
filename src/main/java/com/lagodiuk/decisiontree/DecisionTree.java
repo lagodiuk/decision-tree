@@ -24,6 +24,7 @@ package com.lagodiuk.decisiontree;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -122,21 +123,21 @@ public class DecisionTree {
 			Set<String> ignoredAttributes) {
 
 		if (items.size() <= minimalNumberOfItems) {
-			return makeDLeaf(items);
+			return makeLeaf(items);
 		}
 
 		double entropy = entropy(items);
 
 		if (Double.compare(entropy, 0) == 0) {
 			// all categories the same
-			return makeDLeaf(items);
+			return makeLeaf(items);
 		}
 
 		SplitResult splitResult = findBestSplit(items, attributesPredicates, defaultPredicates, ignoredAttributes);
 
 		if (splitResult == null) {
 			// can't find split which reduces entropy
-			return makeDLeaf(items);
+			return makeLeaf(items);
 		}
 
 		DecisionTree matchSubTree =
@@ -152,7 +153,7 @@ public class DecisionTree {
 		return root;
 	}
 
-	private static DecisionTree makeDLeaf(List<Item> items) {
+	private static DecisionTree makeLeaf(List<Item> items) {
 		List<Object> categories = getCategories(items);
 		Object category = getMostFrequentCategory(categories);
 		DecisionTree leaf = new DecisionTree();
@@ -252,16 +253,14 @@ public class DecisionTree {
 			Map<String, List<Predicate>> attributesPredicates,
 			List<Predicate> defaultPredicates) {
 
-		List<Predicate> predicates = new ArrayList<Predicate>();
-
-		List<? extends Predicate> attrPredicates = attributesPredicates.get(attr);
+		List<Predicate> attrPredicates = attributesPredicates.get(attr);
 		if ((attrPredicates != null) && (!attrPredicates.isEmpty())) {
-			predicates.addAll(attrPredicates);
+			return attrPredicates;
 		} else if ((defaultPredicates != null) && (!defaultPredicates.isEmpty())) {
-			predicates.addAll(defaultPredicates);
+			return defaultPredicates;
 		}
 
-		return predicates;
+		return Collections.emptyList();
 	}
 
 	private static double entropy(List<Item> items) {
@@ -278,8 +277,8 @@ public class DecisionTree {
 
 		double entropy = 0;
 		for (Integer count : values) {
-			double x = count / totalCount;
-			entropy += -x * Math.log(x);
+			double p = count / totalCount;
+			entropy += -p * Math.log(p);
 		}
 		return entropy;
 	}

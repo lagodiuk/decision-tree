@@ -43,7 +43,7 @@ public class MainDemo {
 
 	private static final Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-	private static final int TRAINING_SET_SIZE = 4000;
+	private static final int TRAINING_SET_SIZE = 2000;
 
 	private static final int WIDTH = 150;
 
