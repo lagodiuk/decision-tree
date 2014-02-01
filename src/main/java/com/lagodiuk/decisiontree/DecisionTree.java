@@ -22,18 +22,11 @@
  ******************************************************************************/
 package com.lagodiuk.decisiontree;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import com.lagodiuk.decisiontree.visitors.SwingTreeVisitor;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class DecisionTree {
 
@@ -334,50 +327,4 @@ public class DecisionTree {
 		}
 	}
 
-	private static class SwingTreeVisitor implements DecisionTreeVisitor {
-
-		private DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-
-		@Override
-		public void visit(DecisionTree tree) {
-			if (tree.getRule() != null) {
-				String description = null;
-
-				Predicate predicate = tree.getRule().getPredicate();
-				String attribute = tree.getRule().getAttribute();
-				Object value = tree.getRule().getSampleValue();
-				switch (predicate) {
-					case EQUAL:
-						description = attribute + " == " + value;
-						break;
-
-					case EXISTS:
-						description = "exists " + attribute;
-						break;
-
-					case GTE:
-						description = attribute + " >= " + value;
-						break;
-
-					case LTE:
-						description = attribute + " =< " + value;
-						break;
-
-					default:
-						description = attribute + predicate.toString() + value;
-						break;
-				}
-
-				this.root.setUserObject(description);
-				this.root.add(tree.getMatchSubTree().getSwingTree());
-				this.root.add(tree.getNotMatchSubTree().getSwingTree());
-			} else {
-				this.root.setUserObject(tree.getCategory().toString());
-			}
-		}
-
-		public DefaultMutableTreeNode getRoot() {
-			return this.root;
-		}
-	}
 }
