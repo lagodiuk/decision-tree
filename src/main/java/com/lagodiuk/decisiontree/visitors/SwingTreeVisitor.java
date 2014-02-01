@@ -63,8 +63,8 @@ public class SwingTreeVisitor implements DecisionTreeVisitor {
             }
 
             this.root.setUserObject(description);
-            this.root.add(tree.getMatchSubTree().getSwingTree());
-            this.root.add(tree.getNotMatchSubTree().getSwingTree());
+            this.root.add( buildSwingTree( tree.getMatchSubTree() ) );
+            this.root.add( buildSwingTree( tree.getNotMatchSubTree() ) );
         } else {
             this.root.setUserObject(tree.getCategory().toString());
         }
@@ -72,5 +72,11 @@ public class SwingTreeVisitor implements DecisionTreeVisitor {
 
     public DefaultMutableTreeNode getRoot() {
         return this.root;
+    }
+
+    public static DefaultMutableTreeNode buildSwingTree( DecisionTree tree ) {
+        SwingTreeVisitor visitor = new SwingTreeVisitor();
+        tree.accept( visitor );
+        return visitor.getRoot();
     }
 }

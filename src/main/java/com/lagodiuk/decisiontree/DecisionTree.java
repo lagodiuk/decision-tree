@@ -22,9 +22,6 @@
  ******************************************************************************/
 package com.lagodiuk.decisiontree;
 
-import com.lagodiuk.decisiontree.visitors.SwingTreeVisitor;
-
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -74,13 +71,7 @@ public class DecisionTree {
 		return this;
 	}
 
-	public DefaultMutableTreeNode getSwingTree() {
-		SwingTreeVisitor visitor = new SwingTreeVisitor();
-		this.accept(visitor);
-		return visitor.getRoot();
-	}
-
-	public void accept(DecisionTreeVisitor visitor) {
+    public void accept(DecisionTreeVisitor visitor) {
 		visitor.visit(this);
 	}
 
@@ -113,7 +104,8 @@ public class DecisionTree {
 			int minimalNumberOfItems,
 			Map<String, List<Predicate>> attributesPredicates,
 			List<Predicate> defaultPredicates,
-			Set<String> ignoredAttributes) {
+			Set<String> ignoredAttributes
+    ) {
 
 		if (items.size() <= minimalNumberOfItems) {
 			return makeLeaf(items);
@@ -271,7 +263,7 @@ public class DecisionTree {
 		double entropy = 0;
 		for (Integer count : values) {
 			double p = count / totalCount;
-			entropy += -p * Math.log(p);
+			entropy += -1 * p * Math.log(p);
 		}
 		return entropy;
 	}
