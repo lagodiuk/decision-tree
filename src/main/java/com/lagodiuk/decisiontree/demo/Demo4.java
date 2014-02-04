@@ -21,18 +21,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
 package com.lagodiuk.decisiontree.demo;
-import java.awt.BorderLayout;
-import java.util.Arrays;
-import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import com.lagodiuk.decisiontree.Predicate;
 import com.lagodiuk.decisiontree.DecisionTree;
 import com.lagodiuk.decisiontree.Item;
+import com.lagodiuk.decisiontree.Predicate;
+import com.lagodiuk.decisiontree.visitors.SwingTreeVisitor;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class Demo4 {
 
@@ -41,13 +40,13 @@ public class Demo4 {
 		DecisionTree dt =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(Predicate.EQUAL, Predicate.GTE, Predicate.LTE)
-						.setAttributePredicates("Outlook", Predicate.EQUAL)
-						.setAttributePredicates("Windy", Predicate.EQUAL)
-						.setTrainingSet(makeTrainingSet())
+						.setDefaultPredicates( Predicate.EQUAL, Predicate.GTE, Predicate.LTE )
+						.setAttributePredicates( "Outlook", Predicate.EQUAL )
+						.setAttributePredicates( "Windy", Predicate.EQUAL )
+						.setTrainingSet( makeTrainingSet() )
 						.createDecisionTree();
 
-		display(dt.getSwingTree(), 400, 500);
+        display( SwingTreeVisitor.buildSwingTree( dt ), 400, 500);
 	}
 
 	private static List<Item> makeTrainingSet() {

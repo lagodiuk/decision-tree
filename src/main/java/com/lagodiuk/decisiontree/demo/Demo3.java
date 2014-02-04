@@ -21,23 +21,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
 package com.lagodiuk.decisiontree.demo;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
+
+import com.lagodiuk.decisiontree.DecisionTree;
+import com.lagodiuk.decisiontree.Item;
+import com.lagodiuk.decisiontree.Predicate;
+import com.lagodiuk.decisiontree.visitors.SwingTreeVisitor;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import com.lagodiuk.decisiontree.Predicate;
-import com.lagodiuk.decisiontree.DecisionTree;
-import com.lagodiuk.decisiontree.Item;
 
 public class Demo3 {
 
@@ -46,13 +42,13 @@ public class Demo3 {
 		DecisionTree classifier =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(Predicate.GTE, Predicate.LTE)
-						.setTrainingSet(makeTrainingSet())
-						.setMinimalNumberOfItems(5)
+						.setDefaultPredicates( Predicate.GTE, Predicate.LTE )
+						.setTrainingSet( makeTrainingSet() )
+						.setMinimalNumberOfItems( 5 )
 						.createDecisionTree()
 						.mergeRedundantRules();
 
-		display(classifier.getSwingTree(), 300, 300);
+        display( SwingTreeVisitor.buildSwingTree( classifier ), 300, 300);
 
 		JFrame f1 = new JFrame();
 		f1.setSize(300, 300);

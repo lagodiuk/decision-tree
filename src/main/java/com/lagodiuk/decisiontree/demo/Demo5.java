@@ -21,26 +21,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
 package com.lagodiuk.decisiontree.demo;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
+
+import com.lagodiuk.decisiontree.*;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-
-import com.lagodiuk.decisiontree.DecisionTree;
-import com.lagodiuk.decisiontree.DecisionTreeBuilder;
-import com.lagodiuk.decisiontree.Item;
-import com.lagodiuk.decisiontree.Predicate;
-import com.lagodiuk.decisiontree.RandomForest;
 
 public class Demo5 {
 
@@ -49,9 +39,9 @@ public class Demo5 {
 		DecisionTreeBuilder builder =
 				DecisionTree
 						.createBuilder()
-						.setTrainingSet(makeTrainingSet())
-						.setDefaultPredicates(Predicate.GTE, Predicate.LTE)
-						.setMinimalNumberOfItems(7);
+						.setTrainingSet( makeTrainingSet() )
+						.setDefaultPredicates( Predicate.GTE, Predicate.LTE )
+						.setMinimalNumberOfItems( 7 );
 
 		RandomForest forest = RandomForest.create(builder, 10);
 
@@ -89,7 +79,7 @@ public class Demo5 {
 			}
 		}
 
-		for (;;) {
+		while( true ) {
 			p.getGraphics().drawImage(bi, 0, 0, null);
 		}
 	}
@@ -131,21 +121,4 @@ public class Demo5 {
 
 		return item;
 	}
-
-	public static JFrame display(DefaultMutableTreeNode root, int width, int height) {
-		JTree tree = new JTree(root);
-
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.add(new JScrollPane(tree), BorderLayout.CENTER);
-		for (int i = 0; i < tree.getRowCount(); i++) {
-			tree.expandRow(i);
-		}
-		frame.setSize(width, height);
-		// put frame at center of screen
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
-		return frame;
-	}
-
 }

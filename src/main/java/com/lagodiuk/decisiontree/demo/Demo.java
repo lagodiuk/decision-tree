@@ -21,17 +21,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
 package com.lagodiuk.decisiontree.demo;
-import java.awt.BorderLayout;
-import java.util.Arrays;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.lagodiuk.decisiontree.DecisionTree;
 import com.lagodiuk.decisiontree.Item;
 import com.lagodiuk.decisiontree.Predicate;
+import com.lagodiuk.decisiontree.visitors.SwingTreeVisitor;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
+import java.util.Arrays;
 
 public class Demo {
 
@@ -44,29 +43,32 @@ public class Demo {
 		DecisionTree classifier =
 				DecisionTree
 						.createBuilder()
-						.setDefaultPredicates(Predicate.EQUAL)
-						.setTrainingSet(Arrays.asList(
-								makeItem("Выше", "Дома", "На месте", "Да", Result.LOOSE),
-								makeItem("Выше", "Дома", "На месте", "Нет", Result.WIN),
-								makeItem("Выше", "Дома", "Пропускают", "Нет", Result.LOOSE),
-								makeItem("Ниже", "Дома", "Пропускают", "Нет", Result.WIN),
-								makeItem("Ниже", "В гостях", "Пропускают", "Нет", Result.LOOSE),
-								makeItem("Ниже", "Дома", "Пропускают", "Да", Result.WIN),
-								makeItem("Выше", "В гостях", "На месте", "Да", Result.LOOSE)))
+						.setDefaultPredicates( Predicate.EQUAL )
+						.setTrainingSet(
+                                Arrays.asList(
+                                        makeItem( "Выше", "Дома", "На месте", "Да", Result.LOOSE ),
+                                        makeItem( "Выше", "Дома", "На месте", "Нет", Result.WIN ),
+                                        makeItem( "Выше", "Дома", "Пропускают", "Нет", Result.LOOSE ),
+                                        makeItem( "Ниже", "Дома", "Пропускают", "Нет", Result.WIN ),
+                                        makeItem( "Ниже", "В гостях", "Пропускают", "Нет", Result.LOOSE ),
+                                        makeItem( "Ниже", "Дома", "Пропускают", "Да", Result.WIN ),
+                                        makeItem( "Выше", "В гостях", "На месте", "Да", Result.LOOSE )
+                                )
+                        )
 						.createDecisionTree();
 
-		display(classifier.getSwingTree(), 300, 300);
+        display( SwingTreeVisitor.buildSwingTree( classifier ), 300, 300);
 
 		System.out.println(classifier.classify(makeItem("Ниже", "Дома", "На месте", "Нет", null)));
 	}
 
 	private static Item makeItem(String sopernik, String igraem, String lideru, String dojd, Result category) {
 		Item item = new Item()
-				.setCategory(category)
-				.setAttribute("Соперник", sopernik)
-				.setAttribute("Играем", igraem)
-				.setAttribute("Лидеры", lideru)
-				.setAttribute("Дождь", dojd);
+				.setCategory( category )
+				.setAttribute( "Соперник", sopernik )
+				.setAttribute( "Играем", igraem )
+				.setAttribute( "Лидеры", lideru )
+				.setAttribute( "Дождь", dojd );
 
 		return item;
 	}

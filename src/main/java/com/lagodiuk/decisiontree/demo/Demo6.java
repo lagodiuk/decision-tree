@@ -21,18 +21,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
 package com.lagodiuk.decisiontree.demo;
-import java.awt.BorderLayout;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.lagodiuk.decisiontree.DecisionTree;
 import com.lagodiuk.decisiontree.Item;
 import com.lagodiuk.decisiontree.Predicate;
+import com.lagodiuk.decisiontree.visitors.SwingTreeVisitor;
+
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class Demo6 {
 
@@ -44,11 +43,11 @@ public class Demo6 {
 		DecisionTree tree =
 				DecisionTree
 						.createBuilder()
-						.setTrainingSet(trainingSet())
-						.setDefaultPredicates(Predicate.GTE, Predicate.LTE)
+						.setTrainingSet( trainingSet() )
+						.setDefaultPredicates( Predicate.GTE, Predicate.LTE )
 						.createDecisionTree();
 
-		display(tree.getSwingTree(), 300, 400);
+        display( SwingTreeVisitor.buildSwingTree( tree ), 300, 400);
 	}
 
 	private static List<Item> trainingSet() {
